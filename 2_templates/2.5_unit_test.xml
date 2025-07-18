@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UnitTest>
+    <Metadata>
+        <TestID>[Unique_Test_Identifier]</TestID>
+        <TestName>[Descriptive name of what is being tested]</TestName>
+        <Version>1.0</Version>
+        <Category>[Unit|Integration|Functional|Performance|Security]</Category>
+        <Priority>[Critical|High|Medium|Low]</Priority>
+        <Component>[Component/Module being tested]</Component>
+        <Function>[Specific function/method being tested]</Function>
+        <Description>[Detailed description of what this test validates]</Description>
+        <Tags>[Comma-separated tags: auth, database, api, validation, etc.]</Tags>
+        <Author>[Test author name/email]</Author>
+        <CreatedDate>[YYYY-MM-DD]</CreatedDate>
+        <LastModified>[YYYY-MM-DD]</LastModified>
+    </Metadata>
+
+    <Documentation>
+        <!-- Link to related documentation, specifications, or requirements -->
+        <Reference type="[Requirement|Specification|Bug|Feature]" id="[REQ-123]">
+            [Description of what requirement or spec this test validates]
+        </Reference>
+        <Reference type="CodeUnderTest" path="[src/services/UserService.js]">
+            [Path to the code being tested]
+        </Reference>
+    </Documentation>
+
+    <Environment>
+        <!-- Define test environment requirements -->
+        <Language>[JavaScript|Python|Java|C#|etc.]</Language>
+        <Framework>[Jest|pytest|JUnit|NUnit|etc.]</Framework>
+        <Runtime>[Node.js 18+|Python 3.10+|Java 11+|etc.]</Runtime>
+        <Dependencies>
+            <Dependency name="[library-name]" version="[version]">[Purpose]</Dependency>
+        </Dependencies>
+        <EnvironmentVariables>
+            <Variable name="[TEST_ENV]" value="[test]">[Description]</Variable>
+            <Variable name="[DB_CONNECTION]" value="[mock]">[Use mock database]</Variable>
+        </EnvironmentVariables>
+    </Environment>
+
+    <TestData>
+        <!-- Define all test data, inputs, and fixtures -->
+        <InputData>
+            <DataSet id="valid_user_data">
+                <Format>[JSON|XML|CSV|SQL|Binary]</Format>
+                <Location>[Inline|File|Database|API]</Location>
+                <Data><![CDATA[
+{
+    "id": "12345",
+    "email": "test@example.com",
+    "name": "Test User",
+    "age": 25,
+    "roles": ["user", "admin"]
+}
+                ]]></Data>
+            </DataSet>
+            
+            <DataSet id="invalid_email_data">
+                <Format>JSON</Format>
+                <Location>Inline</Location>
+                <Data><![CDATA[
+{
+    "email": "invalid-email",
+    "name": "Test User"
+}
+                ]]></Data>
+            </DataSet>
+            
+            <DataSet id="large_dataset">
+                <Format>CSV</Format>
+                <Location>File</Location>
+                <FilePath>test/fixtures/large_user_dataset.csv</FilePath>
+                <Description>1000 user records for performance testing</Description>
+            </DataSet>
+        </InputData>
+
+        <MockData>
+            <!-- Define mock objects and stubs -->
+            <Mock id="database_mock">
+                <Type>DatabaseConnection</Type>
+                <Behavior><![CDATA[
+{
+    "findUserById": {
+        "withArgs": ["12345"],
+        "returns": {
+            "id": "12345",
+            "email": "test@example.com",
+            "name": "Test User"
+        }
+    },
+    "findUserById": {
+        "withArgs": ["99999"],
+        "returns": null
+    }
+}
+                ]]></Behavior>
+            </Mock>
+            
+            <Mock id="external_api_mock">
+                <Type>HTTPClient</Type>
+                <Behavior><![CDATA[
+{
+    "get": {
+        "url": "https://api.example.com/validate",
+        "returns": {
+            "status": 200,
+            "data": { "valid": true }
+        }
+    }
+}
+                ]]></Behavior>
+            </Mock>
+        </MockData>
+
+        <Fixtures>
+            <!-- Reusable test fixtures -->
+            <Fixture id="test_database_state">
+                <SetupScript><![CDATA[
+-- SQL to set up test database state
+INSERT INTO users (id, email, name) VALUES 
+    ('12345', 'test@example.com', 'Test User'),
+    ('67890', 'another@example.com', 'Another User');
+                ]]></SetupScript>
+                <TeardownScript><![CDATA[
+-- SQL to clean up after test
+DELETE FROM users WHERE id IN ('12345', '67890');
+                ]]></TeardownScript>
+            </Fixture>
+        </Fixtures>
+    </TestData>
+
+    <TestCases>
+        <!-- Define individual test cases -->
+        <TestCase id="test_valid_user_creation">
+            <Description>Test creating a user with valid data</Description>
+            <TestType>[Positive|Negative|Edge|Boundary]</TestType>
+            <Setup>
+                <Step>Initialize database mock</Step>
+                <Step>Load valid_user_data</Step>
+            </Setup>
+            
+            <Execution>
+                <Step number="1">
+                    <Action>Create UserService instance</Action>
+                    <Code><![CDATA[
+const userService = new UserService(mockDatabase);
+                    ]]></Code>
+                </Step>
+                <Step number="2">
+                    <Action>Call createUser with valid data</Action>
+                    <Input dataSetId="valid_user_data"/>
+                    <Code><![CDATA[
+const result = await userService.createUser(validUserData);
+                    ]]></Code>
+                </Step>
+            </Execution>
+            
+            <Assertions>
+                <Assertion type="[Equality|Existence|Type|Range|Pattern|Exception]">
+                    <Description>User ID should be generated</Description>
+                    <Expected>result.id is not null</Expected>
+                    <Code><![CDATA[
+expect(result.id).toBeDefined();
+expect(typeof result.id).toBe('string');
+                    ]]></Code>
+                </Assertion>
+                <Assertion type="Equality">
+                    <Description>Email should match input</Description>
+                    <Expected>test@example.com</Expected>
+                    <Code><![CDATA[
+expect(result.email).toBe('test@example.com');
+                    ]]></Code>
+                </Assertion>
+                <Assertion type="Custom">
+                    <Description>User should be saved to database</Description>
+                    <Code><![CDATA[
+expect(mockDatabase.save).toHaveBeenCalledWith({
+    email: 'test@example.com',
+    name: 'Test User',
+    age: 25
+});
+                    ]]></Code>
+                </Assertion>
+            </Assertions>
+            
+            <Cleanup>
+                <Step>Reset database mock</Step>
+                <Step>Clear test data</Step>
+            </Cleanup>
+        </TestCase>
+        
+        <TestCase id="test_invalid_email_rejection">
+            <Description>Test that invalid email is rejected</Description>
+            <TestType>Negative</TestType>
+            <Setup>
+                <Step>Initialize validators</Step>
+                <Step>Load invalid_email_data</Step>
+            </Setup>
+            
+            <Execution>
+                <Step number="1">
+                    <Action>Attempt to create user with invalid email</Action>
+                    <Input dataSetId="invalid_email_data"/>
+                    <ExpectedException type="ValidationError">
+                        <Message>Invalid email format</Message>
+                    </ExpectedException>
+                </Step>
+            </Execution>
+            
+            <Assertions>
+                <Assertion type="Exception">
+                    <Description>Should throw ValidationError</Description>
+                    <ExpectedError>ValidationError</ExpectedError>
+                    <ExpectedMessage>Invalid email format</ExpectedMessage>
+                    <Code><![CDATA[
+await expect(userService.createUser(invalidData))
+    .rejects.toThrow(ValidationError);
+                    ]]></Code>
+                </Assertion>
+            </Assertions>
+        </TestCase>
+        
+        <TestCase id="test_performance_large_dataset">
+            <Description>Test performance with large dataset</Description>
+            <TestType>Performance</TestType>
+            <PerformanceRequirements>
+                <MaxExecutionTime unit="milliseconds">5000</MaxExecutionTime>
+                <MaxMemoryUsage unit="MB">100</MaxMemoryUsage>
+            </PerformanceRequirements>
+            
+            <Execution>
+                <Step number="1">
+                    <Action>Load and process large dataset</Action>
+                    <Input dataSetId="large_dataset"/>
+                    <Code><![CDATA[
+const startTime = Date.now();
+const results = await userService.bulkCreate(largeDataset);
+const executionTime = Date.now() - startTime;
+                    ]]></Code>
+                </Step>
+            </Execution>
+            
+            <Assertions>
+                <Assertion type="Performance">
+                    <Description>Should complete within 5 seconds</Description>
+                    <Code><![CDATA[
+expect(executionTime).toBeLessThan(5000);
+                    ]]></Code>
+                </Assertion>
+            </Assertions>
+        </TestCase>
+    </TestCases>
+
+    <ExpectedOutputs>
+        <!-- Define expected outputs for comparison -->
+        <Output testCaseId="test_valid_user_creation">
+            <Format>JSON</Format>
+            <Data><![CDATA[
+{
+    "id": "generated-uuid",
+    "email": "test@example.com",
+    "name": "Test User",
+    "age": 25,
+    "roles": ["user", "admin"],
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-01T00:00:00Z"
+}
+            ]]></Data>
+            <ValidationRules>
+                <Rule field="id" type="pattern" value="^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$">
+                    UUID format validation
+                </Rule>
+                <Rule field="createdAt" type="type" value="ISO8601">
+                    Timestamp format validation
+                </Rule>
+            </ValidationRules>
+        </Output>
+        
+        <Output testCaseId="test_performance_large_dataset">
+            <Format>Metrics</Format>
+            <Data><![CDATA[
+{
+    "totalRecords": 1000,
+    "successfulRecords": 1000,
+    "failedRecords": 0,
+    "executionTime": 4500,
+    "averageTimePerRecord": 4.5
+}
+            ]]></Data>
+        </Output>
+    </ExpectedOutputs>
+
+    <TestConfiguration>
+        <!-- Test execution configuration -->
+        <Timeout unit="seconds">30</Timeout>
+        <Retries>3</Retries>
+        <Parallel>false</Parallel>
+        <ContinueOnFailure>false</ContinueOnFailure>
+        <RandomizeOrder>true</RandomizeOrder>
+        <Seed>12345</Seed>
+        
+        <BeforeAll>
+            <!-- Global setup before all tests -->
+            <Script><![CDATA[
+// Initialize test environment
+global.testHelpers = require('./test-helpers');
+global.mockDatabase = createMockDatabase();
+            ]]></Script>
+        </BeforeAll>
+        
+        <BeforeEach>
+            <!-- Setup before each test -->
+            <Script><![CDATA[
+// Reset mocks and clear data
+jest.clearAllMocks();
+testData.clear();
+            ]]></Script>
+        </BeforeEach>
+        
+        <AfterEach>
+            <!-- Cleanup after each test -->
+            <Script><![CDATA[
+// Verify no pending async operations
+await flushPromises();
+            ]]></Script>
+        </AfterEach>
+        
+        <AfterAll>
+            <!-- Global cleanup after all tests -->
+            <Script><![CDATA[
+// Close connections and clean up resources
+await mockDatabase.close();
+            ]]></Script>
+        </AfterAll>
+    </TestConfiguration>
+
+    <Coverage>
+        <!-- Code coverage requirements -->
+        <Requirements>
+            <LineCoverage minimum="80">Minimum line coverage percentage</LineCoverage>
+            <BranchCoverage minimum="75">Minimum branch coverage percentage</BranchCoverage>
+            <FunctionCoverage minimum="90">Minimum function coverage percentage</FunctionCoverage>
+        </Requirements>
+        <ExcludePatterns>
+            <Pattern>test/**/*</Pattern>
+            <Pattern>**/*.test.js</Pattern>
+            <Pattern>**/node_modules/**</Pattern>
+        </ExcludePatterns>
+    </Coverage>
+
+    <Reporting>
+        <!-- Test reporting configuration -->
+        <Formats>
+            <Format type="console">Default console output</Format>
+            <Format type="junit" path="reports/junit.xml">JUnit XML for CI/CD</Format>
+            <Format type="html" path="reports/coverage/index.html">HTML coverage report</Format>
+            <Format type="json" path="reports/test-results.json">JSON results</Format>
+        </Formats>
+        <Screenshots enabled="true" onFailure="true" path="reports/screenshots"/>
+        <Logs enabled="true" level="error" path="reports/logs"/>
+    </Reporting>
+
+    <Notes>
+        <Note type="Important">
+            This test requires mock database to be properly configured
+        </Note>
+        <Note type="Dependencies">
+            Depends on UserValidator being properly initialized
+        </Note>
+        <Note type="KnownIssues">
+            May fail intermittently on slow CI servers - increase timeout if needed
+        </Note>
+    </Notes>
+</UnitTest>

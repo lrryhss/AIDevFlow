@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RequirementsDocument>
+    <Metadata>
+        <DocumentID>[Project_Requirements_v1.0]</DocumentID>
+        <Title>[Project/Feature Requirements Document]</Title>
+        <Version>1.0</Version>
+        <Status>[Draft|Review|Approved|Deprecated]</Status>
+        <Author>[Author name/email]</Author>
+        <CreatedDate>[YYYY-MM-DD]</CreatedDate>
+        <LastModified>[YYYY-MM-DD]</LastModified>
+        <Description>[Brief description of what this requirements document covers]</Description>
+        <Stakeholders>
+            <Stakeholder role="[Product Owner|Developer|QA|User]">[Name/Contact]</Stakeholder>
+        </Stakeholders>
+    </Metadata>
+
+    <Overview>
+        <Purpose>[Why these requirements exist and what problem they solve]</Purpose>
+        <Scope>[What is included and excluded from these requirements]</Scope>
+        <Assumptions>[List of assumptions made]</Assumptions>
+        <Constraints>[Technical, business, or regulatory constraints]</Constraints>
+        <Dependencies>[External systems or requirements this depends on]</Dependencies>
+    </Overview>
+
+    <Requirements>
+        <!-- Functional Requirements -->
+        <FunctionalRequirements>
+            <Requirement id="[REQ-FUNC-001]" priority="[Critical|High|Medium|Low]" status="[Draft|Approved|Implemented|Tested]">
+                <Title>[Short descriptive title]</Title>
+                <Category>[Authentication|UserManagement|DataProcessing|API|UI|etc.]</Category>
+                <Description>[Detailed description of the requirement]</Description>
+                
+                <UserStory>
+                    <AsA>[User role]</AsA>
+                    <IWant>[Feature/functionality]</IWant>
+                    <SoThat>[Business value/benefit]</SoThat>
+                </UserStory>
+                
+                <AcceptanceCriteria>
+                    <Criterion id="AC-001">
+                        <Given>[Initial context/state]</Given>
+                        <When>[Action taken]</When>
+                        <Then>[Expected outcome]</Then>
+                    </Criterion>
+                    <Criterion id="AC-002">
+                        <Given>[Another context]</Given>
+                        <When>[Another action]</When>
+                        <Then>[Another outcome]</Then>
+                    </Criterion>
+                </AcceptanceCriteria>
+                
+                <BusinessRules>
+                    <Rule id="BR-001">[Specific business rule or constraint]</Rule>
+                    <Rule id="BR-002">[Another business rule]</Rule>
+                </BusinessRules>
+                
+                <Dependencies>
+                    <DependsOn type="Requirement" id="[REQ-ID]">[Description of dependency]</DependsOn>
+                    <DependsOn type="External" system="[System name]">[External dependency]</DependsOn>
+                </Dependencies>
+                
+                <Fulfillment>
+                    <!-- Links to implementation and tests -->
+                    <ImplementationGuides>
+                        <Guide id="[GUIDE_ID]" path="docs/implementation/guides/[guide].xml">
+                            [Implementation guide description]
+                        </Guide>
+                    </ImplementationGuides>
+                    <UnitTests>
+                        <Test id="[TEST_ID]" path="tests/unit/[test].xml">
+                            [Test description]
+                        </Test>
+                    </UnitTests>
+                    <IntegrationTests>
+                        <Test id="[INT_TEST_ID]" path="tests/integration/[test].xml">
+                            [Integration test description]
+                        </Test>
+                    </IntegrationTests>
+                </Fulfillment>
+                
+                <Notes>
+                    <Note type="[Technical|Business|Security]">[Additional information]</Note>
+                </Notes>
+            </Requirement>
+            
+            <!-- Additional functional requirements -->
+            <Requirement id="[REQ-FUNC-002]" priority="High" status="Draft">
+                <Title>[Another requirement]</Title>
+                <!-- Similar structure as above -->
+            </Requirement>
+        </FunctionalRequirements>
+
+        <!-- Non-Functional Requirements -->
+        <NonFunctionalRequirements>
+            <Requirement id="[REQ-PERF-001]" priority="High" status="Draft">
+                <Title>[Performance requirement title]</Title>
+                <Category>Performance</Category>
+                <Description>[Detailed performance requirement]</Description>
+                
+                <PerformanceMetrics>
+                    <Metric name="ResponseTime" target="200ms" condition="95th percentile"/>
+                    <Metric name="Throughput" target="1000" unit="requests/second"/>
+                    <Metric name="ConcurrentUsers" target="10000" condition="peak load"/>
+                </PerformanceMetrics>
+                
+                <TestScenarios>
+                    <Scenario>[Load test scenario description]</Scenario>
+                    <Scenario>[Stress test scenario description]</Scenario>
+                </TestScenarios>
+                
+                <Fulfillment>
+                    <ImplementationGuides>
+                        <Guide id="[PERF_GUIDE_ID]">Performance optimization guide</Guide>
+                    </ImplementationGuides>
+                    <PerformanceTests>
+                        <Test id="[PERF_TEST_ID]" path="tests/performance/[test].xml">
+                            [Performance test description]
+                        </Test>
+                    </PerformanceTests>
+                </Fulfillment>
+            </Requirement>
+            
+            <Requirement id="[REQ-SEC-001]" priority="Critical" status="Draft">
+                <Title>[Security requirement title]</Title>
+                <Category>Security</Category>
+                <Description>[Detailed security requirement]</Description>
+                
+                <SecurityControls>
+                    <Control type="Authentication">[Auth requirement details]</Control>
+                    <Control type="Authorization">[Authz requirement details]</Control>
+                    <Control type="Encryption">[Encryption requirement details]</Control>
+                </SecurityControls>
+                
+                <ComplianceStandards>
+                    <Standard>[OWASP|PCI-DSS|HIPAA|GDPR|etc.]</Standard>
+                </ComplianceStandards>
+                
+                <Fulfillment>
+                    <ImplementationGuides>
+                        <Guide id="[SEC_GUIDE_ID]">Security implementation guide</Guide>
+                    </ImplementationGuides>
+                    <SecurityTests>
+                        <Test id="[SEC_TEST_ID]">Security test suite</Test>
+                    </SecurityTests>
+                </Fulfillment>
+            </Requirement>
+            
+            <Requirement id="[REQ-SCALE-001]" priority="Medium" status="Draft">
+                <Title>[Scalability requirement]</Title>
+                <Category>Scalability</Category>
+                <Description>[Scalability details]</Description>
+                
+                <ScalabilityTargets>
+                    <Target dimension="Users" from="1000" to="100000" timeframe="1 year"/>
+                    <Target dimension="Data" from="1GB" to="1TB" timeframe="2 years"/>
+                    <Target dimension="Transactions" growth="50%" period="yearly"/>
+                </ScalabilityTargets>
+            </Requirement>
+            
+            <Requirement id="[REQ-UX-001]" priority="High" status="Draft">
+                <Title>[Usability requirement]</Title>
+                <Category>Usability</Category>
+                <Description>[Usability details]</Description>
+                
+                <UsabilityMetrics>
+                    <Metric name="TaskCompletionTime" target="2 minutes" task="User registration"/>
+                    <Metric name="ErrorRate" target="5%" condition="maximum"/>
+                    <Metric name="UserSatisfaction" target="4.5" scale="5" method="survey"/>
+                </UsabilityMetrics>
+            </Requirement>
+        </NonFunctionalRequirements>
+
+        <!-- Technical Requirements -->
+        <TechnicalRequirements>
+            <Requirement id="[REQ-TECH-001]" priority="High" status="Draft">
+                <Title>[Technical platform requirement]</Title>
+                <Category>Platform</Category>
+                <Description>[Platform and technology constraints]</Description>
+                
+                <TechnologyStack>
+                    <Technology type="Language">[JavaScript|Python|Java|etc.]</Technology>
+                    <Technology type="Framework">[React|Django|Spring|etc.]</Technology>
+                    <Technology type="Database">[PostgreSQL|MongoDB|etc.]</Technology>
+                    <Technology type="Infrastructure">[AWS|Azure|On-premise|etc.]</Technology>
+                </TechnologyStack>
+                
+                <Compatibility>
+                    <Browser name="Chrome" minVersion="90"/>
+                    <Browser name="Firefox" minVersion="88"/>
+                    <Browser name="Safari" minVersion="14"/>
+                    <OS name="Windows" minVersion="10"/>
+                    <OS name="macOS" minVersion="10.15"/>
+                </Compatibility>
+            </Requirement>
+            
+            <Requirement id="[REQ-INT-001]" priority="Medium" status="Draft">
+                <Title>[Integration requirement]</Title>
+                <Category>Integration</Category>
+                <Description>[External system integration details]</Description>
+                
+                <IntegrationPoints>
+                    <System name="[External System]" type="[REST|SOAP|GraphQL|MessageQueue]">
+                        <Endpoint>[API endpoint or connection details]</Endpoint>
+                        <DataFormat>[JSON|XML|Protocol Buffers|etc.]</DataFormat>
+                        <Authentication>[OAuth2|APIKey|Certificate|etc.]</Authentication>
+                    </System>
+                </IntegrationPoints>
+            </Requirement>
+        </TechnicalRequirements>
+
+        <!-- Data Requirements -->
+        <DataRequirements>
+            <Requirement id="[REQ-DATA-001]" priority="High" status="Draft">
+                <Title>[Data retention requirement]</Title>
+                <Category>DataManagement</Category>
+                <Description>[Data lifecycle and retention policies]</Description>
+                
+                <DataPolicies>
+                    <RetentionPolicy dataType="UserData" period="7 years" reason="Regulatory"/>
+                    <RetentionPolicy dataType="Logs" period="90 days" reason="Operational"/>
+                    <ArchivalPolicy dataType="Transactions" afterPeriod="1 year" to="Cold storage"/>
+                </DataPolicies>
+                
+                <PrivacyRequirements>
+                    <Requirement>[GDPR compliance for EU users]</Requirement>
+                    <Requirement>[Right to be forgotten implementation]</Requirement>
+                    <Requirement>[Data portability]</Requirement>
+                </PrivacyRequirements>
+            </Requirement>
+        </DataRequirements>
+    </Requirements>
+
+    <UseCases>
+        <UseCase id="UC-001" priority="High">
+            <Title>[Use case title]</Title>
+            <PrimaryActor>[User role]</PrimaryActor>
+            <Preconditions>
+                <Condition>[System state before use case]</Condition>
+            </Preconditions>
+            <MainFlow>
+                <Step number="1">[Actor action]</Step>
+                <Step number="2">[System response]</Step>
+                <Step number="3">[Actor action]</Step>
+                <Step number="4">[System response]</Step>
+            </MainFlow>
+            <AlternativeFlows>
+                <Flow id="AF-001" atStep="2">
+                    <Step number="2a">[Alternative action]</Step>
+                    <Step number="2b">[Alternative response]</Step>
+                </Flow>
+            </AlternativeFlows>
+            <ExceptionFlows>
+                <Flow id="EF-001" atStep="3">
+                    <Step number="3a">[Error condition]</Step>
+                    <Step number="3b">[Error handling]</Step>
+                </Flow>
+            </ExceptionFlows>
+            <Postconditions>
+                <Condition>[System state after successful completion]</Condition>
+            </Postconditions>
+            <RelatedRequirements>
+                <Requirement id="[REQ-FUNC-001]"/>
+                <Requirement id="[REQ-FUNC-002]"/>
+            </RelatedRequirements>
+        </UseCase>
+    </UseCases>
+
+    <TraceabilityMatrix>
+        <!-- Overview of requirement coverage -->
+        <RequirementCoverage>
+            <Requirement id="[REQ-FUNC-001]">
+                <ImplementationStatus>Completed</ImplementationStatus>
+                <TestStatus>Passed</TestStatus>
+                <CoveragePercentage>95</CoveragePercentage>
+            </Requirement>
+            <Requirement id="[REQ-FUNC-002]">
+                <ImplementationStatus>InProgress</ImplementationStatus>
+                <TestStatus>Pending</TestStatus>
+                <CoveragePercentage>60</CoveragePercentage>
+            </Requirement>
+        </RequirementCoverage>
+    </TraceabilityMatrix>
+
+    <ChangeHistory>
+        <Change version="1.0" date="[YYYY-MM-DD]" author="[Name]">
+            <Description>[Initial version]</Description>
+        </Change>
+        <Change version="1.1" date="[YYYY-MM-DD]" author="[Name]">
+            <Description>[Added performance requirements]</Description>
+            <RequirementsAffected>
+                <Requirement id="[REQ-PERF-001]"/>
+            </RequirementsAffected>
+        </Change>
+    </ChangeHistory>
+
+    <Approvals>
+        <Approval role="Product Owner" name="[Name]" date="[YYYY-MM-DD]" status="[Pending|Approved]"/>
+        <Approval role="Technical Lead" name="[Name]" date="[YYYY-MM-DD]" status="[Pending|Approved]"/>
+        <Approval role="QA Lead" name="[Name]" date="[YYYY-MM-DD]" status="[Pending|Approved]"/>
+    </Approvals>
+
+    <Glossary>
+        <Term name="[Technical term]">
+            <Definition>[Clear definition of the term]</Definition>
+        </Term>
+        <Term name="[Business term]">
+            <Definition>[Clear definition of the term]</Definition>
+        </Term>
+    </Glossary>
+</RequirementsDocument>

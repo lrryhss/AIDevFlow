@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UserStory>
+    <Metadata>
+        <StoryID>[Unique_ID_Following_Convention]</StoryID>
+        <Title>[Brief, descriptive title of the user story]</Title>
+        <Version>1.0</Version>
+        <Type>[Feature|Enhancement|Bug|Technical|Spike]</Type>
+        <Priority>[Critical|High|Medium|Low]</Priority>
+        <Status>[Draft|Ready|InProgress|Testing|Done|Blocked]</Status>
+        <Epic>[Parent epic or feature area]</Epic>
+        <Sprint>[Target sprint/iteration]</Sprint>
+        <StoryPoints>[Estimated complexity: 1, 2, 3, 5, 8, 13]</StoryPoints>
+        <BusinessValue>[High|Medium|Low]</BusinessValue>
+        <Risk>[High|Medium|Low]</Risk>
+        <Tags>[Comma-separated tags: frontend, backend, api, ux, etc.]</Tags>
+        <CreatedBy>[Author name/email]</CreatedBy>
+        <CreatedDate>[YYYY-MM-DD]</CreatedDate>
+        <LastModified>[YYYY-MM-DD]</LastModified>
+    </Metadata>
+
+    <StoryStatement>
+        <!-- The classic user story format -->
+        <AsA>[User role/persona]</AsA>
+        <IWant>[Feature or capability desired]</IWant>
+        <SoThat>[Business value or benefit]</SoThat>
+        <Example><![CDATA[
+As a registered user
+I want to reset my password
+So that I can regain access to my account if I forget my credentials
+        ]]></Example>
+    </StoryStatement>
+
+    <Context>
+        <!-- Additional context and background -->
+        <Background>[Why this story exists, what problem it solves]</Background>
+        <UserPersona>
+            <Name>[Persona name, e.g., "Sarah the Shopper"]</Name>
+            <Description>[Brief description of the user type]</Description>
+            <Goals>[What this persona wants to achieve]</Goals>
+            <PainPoints>[Current frustrations or problems]</PainPoints>
+        </UserPersona>
+        <CurrentState>[How things work today, if applicable]</CurrentState>
+        <DesiredState>[How things should work after implementation]</DesiredState>
+    </Context>
+
+    <AcceptanceCriteria>
+        <!-- Specific, testable criteria using Given-When-Then format -->
+        <Criterion id="AC_001" priority="Must Have">
+            <Given>[Initial context or precondition]</Given>
+            <When>[Action or event]</When>
+            <Then>[Expected outcome]</Then>
+            <Example><![CDATA[
+Given I am on the login page
+When I click "Forgot Password"
+Then I should be redirected to the password reset page
+And I should see a form to enter my email address
+            ]]></Example>
+        </Criterion>
+        <Criterion id="AC_002" priority="Must Have">
+            <Given>[Another scenario]</Given>
+            <When>[Another action]</When>
+            <Then>[Another outcome]</Then>
+        </Criterion>
+        <Criterion id="AC_003" priority="Should Have">
+            <Given>[Nice-to-have scenario]</Given>
+            <When>[Optional action]</When>
+            <Then>[Desired outcome]</Then>
+        </Criterion>
+    </AcceptanceCriteria>
+
+    <Scenarios>
+        <!-- Detailed usage scenarios -->
+        <Scenario id="SC_001" type="HappyPath">
+            <Title>[Main success scenario]</Title>
+            <Steps>
+                <Step number="1">[User action or system state]</Step>
+                <Step number="2">[User action or system response]</Step>
+                <Step number="3">[Continue until goal achieved]</Step>
+            </Steps>
+            <ExpectedResult>[What success looks like]</ExpectedResult>
+        </Scenario>
+        <Scenario id="SC_002" type="EdgeCase">
+            <Title>[Edge case scenario]</Title>
+            <Steps>
+                <Step number="1">[Unusual but valid situation]</Step>
+                <Step number="2">[How system should handle it]</Step>
+            </Steps>
+            <ExpectedResult>[Graceful handling]</ExpectedResult>
+        </Scenario>
+        <Scenario id="SC_003" type="ErrorCase">
+            <Title>[Error scenario]</Title>
+            <Steps>
+                <Step number="1">[Error condition]</Step>
+                <Step number="2">[Error handling]</Step>
+            </Steps>
+            <ExpectedResult>[User-friendly error handling]</ExpectedResult>
+        </Scenario>
+    </Scenarios>
+
+    <BusinessRules>
+        <!-- Business rules and constraints -->
+        <Rule id="BR_001" type="Validation">
+            <Description>[Business rule description]</Description>
+            <Implementation>[How to implement this rule]</Implementation>
+        </Rule>
+        <Rule id="BR_002" type="Security">
+            <Description>[Security-related rule]</Description>
+            <Implementation>[Security implementation details]</Implementation>
+        </Rule>
+        <Rule id="BR_003" type="Compliance">
+            <Description>[Regulatory or compliance rule]</Description>
+            <Implementation>[Compliance requirements]</Implementation>
+        </Rule>
+    </BusinessRules>
+
+    <UserInterface>
+        <!-- UI/UX considerations -->
+        <Mockups>
+            <Mockup id="UI_001" path="mockups/[story_id]/[screen_name].png">
+                <Description>[What this mockup shows]</Description>
+                <InteractionNotes>[How user interacts with this screen]</InteractionNotes>
+            </Mockup>
+        </Mockups>
+        <UIRequirements>
+            <Requirement>[Responsive design for mobile and desktop]</Requirement>
+            <Requirement>[Accessibility: WCAG 2.1 AA compliant]</Requirement>
+            <Requirement>[Loading states for all async operations]</Requirement>
+        </UIRequirements>
+        <UXPrinciples>
+            <Principle>[Clear error messages with actionable steps]</Principle>
+            <Principle>[Progressive disclosure of complex features]</Principle>
+        </UXPrinciples>
+    </UserInterface>
+
+    <TechnicalConsiderations>
+        <!-- Technical details and constraints -->
+        <Architecture>
+            <Component>[Frontend components affected]</Component>
+            <Component>[Backend services involved]</Component>
+            <Component>[Database changes required]</Component>
+        </Architecture>
+        <APIs>
+            <Endpoint method="[GET|POST|PUT|DELETE]" path="[/api/resource]">
+                <Description>[What this endpoint does]</Description>
+                <RequestFormat>[Expected request format]</RequestFormat>
+                <ResponseFormat>[Expected response format]</ResponseFormat>
+            </Endpoint>
+        </APIs>
+        <Performance>
+            <Requirement>[Response time < 200ms]</Requirement>
+            <Requirement>[Support 1000 concurrent users]</Requirement>
+        </Performance>
+        <Security>
+            <Requirement>[Authentication required]</Requirement>
+            <Requirement>[Data encryption in transit]</Requirement>
+        </Security>
+    </TechnicalConsiderations>
+
+    <Dependencies>
+        <!-- What this story depends on -->
+        <Dependency type="Story" id="[STORY_ID]">
+            <Description>[Story that must be completed first]</Description>
+            <Status>[Completed|InProgress|NotStarted]</Status>
+        </Dependency>
+        <Dependency type="Technical" id="[TECH_DEP_ID]">
+            <Description>[Technical prerequisite]</Description>
+            <Status>[Available|Pending]</Status>
+        </Dependency>
+        <Dependency type="External" id="[EXT_DEP_ID]">
+            <Description>[External system or service]</Description>
+            <Status>[Ready|Waiting]</Status>
+        </Dependency>
+    </Dependencies>
+
+    <Definition of Done>
+        <!-- Checklist for story completion -->
+        <DoDItem checked="false">Code complete and peer reviewed</DoDItem>
+        <DoDItem checked="false">Unit tests written and passing (>80% coverage)</DoDItem>
+        <DoDItem checked="false">Integration tests passing</DoDItem>
+        <DoDItem checked="false">Documentation updated</DoDItem>
+        <DoDItem checked="false">Acceptance criteria verified</DoDItem>
+        <DoDItem checked="false">Performance requirements met</DoDItem>
+        <DoDItem checked="false">Security review completed</DoDItem>
+        <DoDItem checked="false">Deployed to staging environment</DoDItem>
+        <DoDItem checked="false">Product owner approval received</DoDItem>
+    </DefinitionOfDone>
+
+    <TestingStrategy>
+        <!-- How this story will be tested -->
+        <TestTypes>
+            <TestType name="Unit" coverage="90%">
+                <Description>Test individual components and functions</Description>
+                <TestFiles>
+                    <TestFile>tests/unit/[component].test.xml</TestFile>
+                </TestFiles>
+            </TestType>
+            <TestType name="Integration" coverage="80%">
+                <Description>Test component interactions</Description>
+                <TestFiles>
+                    <TestFile>tests/integration/[feature].test.xml</TestFile>
+                </TestFiles>
+            </TestType>
+            <TestType name="E2E" coverage="100% of critical paths">
+                <Description>Test complete user workflows</Description>
+                <TestFiles>
+                    <TestFile>tests/e2e/[workflow].test.xml</TestFile>
+                </TestFiles>
+            </TestType>
+        </TestTypes>
+        <TestData>
+            <DataSet>[Test data requirements]</DataSet>
+        </TestData>
+    </TestingStrategy>
+
+    <RequirementReferences>
+        <!-- Links to formal requirements -->
+        <Requirement id="[REQ_ID]" path="requirements/[requirement].xml">
+            <Description>[Related formal requirement]</Description>
+            <Coverage>[What aspects this story covers]</Coverage>
+        </Requirement>
+    </RequirementReferences>
+
+    <ImplementationReferences>
+        <!-- Links to implementation guides -->
+        <ImplementationGuide id="[GUIDE_ID]" path="implementation/guides/[guide].xml">
+            <Description>[Implementation guide for this story]</Description>
+            <Tasks>[Number of implementation tasks]</Tasks>
+        </ImplementationGuide>
+    </ImplementationReferences>
+
+    <Risks>
+        <!-- Potential risks and mitigation -->
+        <Risk id="RISK_001" probability="[High|Medium|Low]" impact="[High|Medium|Low]">
+            <Description>[Risk description]</Description>
+            <Mitigation>[How to mitigate this risk]</Mitigation>
+            <Contingency>[Backup plan if risk occurs]</Contingency>
+        </Risk>
+    </Risks>
+
+    <Conversations>
+        <!-- Important discussions and decisions -->
+        <Conversation date="[YYYY-MM-DD]" participants="[Names]">
+            <Topic>[What was discussed]</Topic>
+            <Decision>[What was decided]</Decision>
+            <ActionItems>
+                <Item owner="[Name]">[Action to be taken]</Item>
+            </ActionItems>
+        </Conversation>
+    </Conversations>
+
+    <Analytics>
+        <!-- How to measure success -->
+        <SuccessMetrics>
+            <Metric name="[Metric name]" target="[Target value]">
+                <Description>[What this measures]</Description>
+                <MeasurementMethod>[How to measure]</MeasurementMethod>
+            </Metric>
+        </SuccessMetrics>
+        <TrackingRequirements>
+            <Event name="[Event name]">
+                <Description>[What to track]</Description>
+                <Properties>[Event properties to capture]</Properties>
+            </Event>
+        </TrackingRequirements>
+    </Analytics>
+
+    <ReleaseNotes>
+        <!-- Information for release documentation -->
+        <UserFacingChanges>[What users will notice]</UserFacingChanges>
+        <TechnicalChanges>[Technical changes made]</TechnicalChanges>
+        <MigrationSteps>[Any migration required]</MigrationSteps>
+        <RollbackPlan>[How to rollback if needed]</RollbackPlan>
+    </ReleaseNotes>
+
+    <Notes>
+        <!-- Additional notes and considerations -->
+        <Note type="[Important|Warning|Info|Decision]" date="[YYYY-MM-DD]" author="[Name]">
+            [Note content]
+        </Note>
+    </Notes>
+</UserStory>
