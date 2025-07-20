@@ -20,7 +20,7 @@ GitFlow defines a strict but flexible branching model with specific roles for ea
 
 - **`develop`**: This branch serves as an integration branch for ongoing development. It contains the latest delivered development changes for the next release. When the `develop` branch reaches a stable point and is ready for a new release, it is merged into a `release` branch.
 
-- **`feature` branches**: These branches are used to develop new features for the upcoming or a distant future release. They typically branch off from `develop` and merge back into `develop` once the feature is complete and tested. Feature branches are temporary and exist only for the duration of the feature's development. For managing work-in-progress (WIP) within feature branches, refer to the [Git Work-in-Progress (WIP) Remote Backup SOP](git_wip_remote_backup_sop.md).
+- **`feature` branches**: These branches are used to develop new features for the upcoming or a distant future release. They typically branch off from `develop` and merge back into `develop` once the feature is complete and tested. Feature branches are temporary and exist only for the duration of the feature's development. For managing work-in-progress (WIP) on any branch, refer to the [Git Work-in-Progress (WIP) Remote Backup SOP](git_wip_remote_backup_sop.md).
 
 - **`release` branches**: These branches are used to prepare a new production release. They branch off from `develop` when the `develop` branch has enough features for a release. No new features are added to release branches; instead, they are used for bug fixes, final polishing, and preparing metadata (version numbers, build dates). Once ready, a `release` branch is merged into both `main` and `develop`.
 
