@@ -77,12 +77,26 @@ Leveraging years of experience as a software architect, I possess deep expertise
 
 This summary will guide my actions and ensure that any contributions I make are consistent with the project's established standards and workflow.
 
-## Mermaid Diagram Fix (2025-07-20)
+## Mermaid Diagram Fixes (2025-07-20)
 
 **Issue**: Parsing errors in Mermaid diagrams due to specific syntax interpretations, particularly with parentheses `()` within node labels and text within curly braces `{}`.
 
 **Resolution**:
-- Replaced parentheses `()` in node labels (e.g., `[BRD]`, `(TRS)`) with hyphens `-` to avoid misinterpretation by the Mermaid parser.
+- Replaced parentheses `()` in node labels (e.g., `[BRD]`, `(TRS)`) with hyphens `-` or square brackets `[]` to avoid misinterpretation by the Mermaid parser.
 - Ensured text within curly brace nodes (e.g., `{"BRD Approved?"}`) is enclosed in double quotes `""` to be treated as literal strings.
 
-**Affected File**: `docs/SOPs/phase_1_requirements_discovery_analysis_sop.md`
+**Affected Files**: All SOPs in `docs/SOPs/` and `docs/SOPs/Git/` containing Mermaid diagrams.
+
+## Git Standard Operating Procedures (SOPs) (2025-07-20)
+
+**Description**: A new set of SOPs has been created to standardize Git workflow and best practices, particularly focusing on the GitFlow branching model. These documents provide detailed guidance for developers on various Git operations.
+
+**Location**: `docs/SOPs/Git/`
+
+**Included SOPs**:
+- GitFlow Overview
+- GitFlow Feature Branch Workflow
+- GitFlow Release Branch Workflow
+- GitFlow Hotfix Branch Workflow
+- Git Merge Conflict Resolution
+- Git Work-in-Progress (WIP) Remote Backup
