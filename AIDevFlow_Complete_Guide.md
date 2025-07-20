@@ -78,6 +78,30 @@ The AI Dev Flow is designed to be used with an AI assistant. This section contai
 
 *   **Find them here:** `5_reference/`
 
+### Additional Enterprise Standards
+
+Beyond the core 5 steps, enterprise-grade software development requires adherence to rigorous standards and processes. These documents provide detailed Standard Operating Procedures (SOPs) and language-specific coding and security style guides.
+
+*   **Standard Operating Procedures (SOPs)**: Detailed guides for critical processes.
+    *   [Phase 1: Requirements Discovery and Analysis SOP](docs/SOPs/phase_1_requirements_discovery_analysis_sop.md)
+    *   [Phase 2: Architecture and Design SOP](docs/SOPs/phase_2_architecture_design_sop.md)
+    *   [Phase 3: Implementation and Testing SOP](docs/SOPs/phase_3_implementation_testing_sop.md)
+    *   [Phase 4: Documentation and Knowledge Transfer SOP](docs/SOPs/phase_4_documentation_knowledge_transfer_sop.md)
+    *   [Review and Approval Process SOP](docs/SOPs/review_approval_process_sop.md)
+    *   [Risk Management SOP](docs/SOPs/risk_management_sop.md)
+
+*   **Coding Style Guides**: Language-specific rules for consistent code quality.
+    *   [Java and C# Coding Style Guide](docs/style_guides/coding/java_csharp_style_guide.md)
+    *   [Python Coding Style Guide](docs/style_guides/coding/python_style_guide.md)
+    *   [JavaScript and TypeScript Coding Style Guide](docs/style_guides/coding/javascript_typescript_style_guide.md)
+    *   [C++ Coding Style Guide](docs/style_guides/coding/cpp_coding_style_guide.md)
+
+*   **Security Best Practices Guides**: Language-specific guidelines for secure development.
+    *   [Java Security Best Practices Guide](docs/style_guides/security/java_security_best_practices.md)
+    *   [Python Security Best Practices Guide](docs/style_guides/security/python_security_best_practices.md)
+    *   [JavaScript/Node.js Security Best Practices Guide](docs/style_guides/security/javascript_nodejs_security_best_practices.md)
+    *   [C++ Security Best Practices Guide](docs/style_guides/security/cpp_security_best_practices.md)
+
 ---
 
 ## Why Bother? The Secret to Building Enterprise-Grade Software
