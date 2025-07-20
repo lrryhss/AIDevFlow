@@ -111,7 +111,7 @@ graph TD
     I -- No --> D;
     I -- Yes --> J[git checkout feature/<name> & pull];
     J --> K[Merge/Rebase WIP into feature/<name>];
-    K --> L[Clean up commits (rebase -i)];
+    K --> L[Clean up commits - rebase -i];
     L --> M[git push origin feature/<name>];
     M --> N[Delete wip/<initials>/<name> branch];
     N --> O[End Task];
