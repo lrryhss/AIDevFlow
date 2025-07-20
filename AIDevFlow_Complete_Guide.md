@@ -78,6 +78,12 @@ The AI Dev Flow is designed to be used with an AI assistant. This section contai
 
 *   **Find them here:** `5_reference/`
 
+### AI Prompts by Role
+
+To further assist with AI-driven development, specific prompt guides are available for various roles within a software development team. These guides provide tailored prompts to help each role leverage AI effectively in their daily tasks.
+
+*   **Find them here:** `5_reference/roles/`
+
 ### Additional Enterprise Standards
 
 Beyond the core 5 steps, enterprise-grade software development requires adherence to rigorous standards and processes. These documents provide detailed Standard Operating Procedures (SOPs) and language-specific coding and security style guides.
