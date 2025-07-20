@@ -102,6 +102,14 @@ Beyond the core 5 steps, enterprise-grade software development requires adherenc
     *   [JavaScript/Node.js Security Best Practices Guide](docs/style_guides/security/javascript_nodejs_security_best_practices.md)
     *   [C++ Security Best Practices Guide](docs/style_guides/security/cpp_security_best_practices.md)
 
+*   **Git SOPs**: Standard Operating Procedures for Git workflow and best practices.
+    *   [GitFlow Overview SOP](docs/SOPs/Git/gitflow_overview_sop.md)
+    *   [GitFlow Feature Branch Workflow SOP](docs/SOPs/Git/gitflow_feature_sop.md)
+    *   [GitFlow Release Branch Workflow SOP](docs/SOPs/Git/gitflow_release_sop.md)
+    *   [GitFlow Hotfix Branch Workflow SOP](docs/SOPs/Git/gitflow_hotfix_sop.md)
+    *   [Git Merge Conflict Resolution SOP](docs/SOPs/Git/gitflow_merge_conflict_sop.md)
+    *   [Git Work-in-Progress (WIP) Remote Backup SOP](docs/SOPs/Git/git_wip_remote_backup_sop.md)
+
 ---
 
 ## Why Bother? The Secret to Building Enterprise-Grade Software
