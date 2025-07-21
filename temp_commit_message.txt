@@ -1,0 +1,3 @@
+docs: Clarify design document directory structure in prompt
+
+Updated `5_reference/5.4_requirements_to_design_prompt.md` to explicitly state that subdirectories will be created for each logical component in the design documentation, following the `ComponentName` pattern from `1_principles/1.3_design_principles.md`.
