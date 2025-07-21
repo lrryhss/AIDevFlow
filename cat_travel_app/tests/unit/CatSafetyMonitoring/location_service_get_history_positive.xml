@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UnitTest>
+    <Metadata>
+        <TestID>CSM_LOC_GET_001</TestID>
+        <TestName>Get Location History - Positive</TestName>
+        <Version>1.0</Version>
+        <Category>Unit</Category>
+        <Priority>High</Priority>
+        <Component>LocationService</Component>
+        <Function>get_location_history</Function>
+        <Description>Validates that the location history for a specific tag can be retrieved successfully.</Description>
+        <Tags>location, history, positive</Tags>
+        <Author>Gemini</Author>
+        <CreatedDate>2025-07-21</CreatedDate>
+        <LastModified>2025-07-21</LastModified>
+    </Metadata>
+
+    <Documentation>
+        <Reference type="Requirement" id="AC-002">
+            This test validates the acceptance criterion for viewing a cat's movement history.
+        </Reference>
+        <Reference type="Specification" id="API-GET-locations-tag_id">
+            This test covers the API endpoint for retrieving location history.
+        </Reference>
+        <Reference type="CodeUnderTest" path="src/cat_safety/location_service.py">
+            The `get_location_history` function within the LocationService.
+        </Reference>
+    </Documentation>
+
+    <Environment>
+        <Language>Python</Language>
+        <Framework>pytest</Framework>
+        <Runtime>Python 3.10+</Runtime>
+    </Environment>
+
+    <TestData>
+        <InputData>
+            <DataSet id="valid_history_request">
+                <Format>JSON</Format>
+                <Location>Inline</Location>
+                <Data><![CDATA[
+{
+    "tag_id": "tag-uuid-abc-123",
+    "page": 1,
+    "limit": 10
+}
+                ]]></Data>
+            </DataSet>
+        </InputData>
+
+        <MockData>
+            <Mock id="database_mock">
+                <Type>DatabaseConnection</Type>
+                <Behavior><![CDATA[
+{
+    "get_location_history_for_tag": {
+        "withArgs": ["tag-uuid-abc-123", 1, 10],
+        "returns": [
+            {"latitude": 40.7128, "longitude": -74.0060, "recorded_at": "2025-07-21T10:00:00Z"},
+            {"latitude": 40.7129, "longitude": -74.0061, "recorded_at": "2025-07-21T10:01:00Z"}
+        ]
+    }
+}
+                ]]></Behavior>
+            </Mock>
+        </MockData>
+    </TestData>
+
+    <TestCases>
+        <TestCase id="test_get_location_history">
+            <Description>Ensures that a valid request for location history returns the correct data.</Description>
+            <TestType>Positive</TestType>
+            <Setup>
+                <Step>Initialize LocationService with a mocked database connection.</Step>
+            </Setup>
+            
+            <Execution>
+                <Step number="1">
+                    <Action>Call the `get_location_history` function.</Action>
+                    <Input dataSetId="valid_history_request"/>
+                    <Code><![CDATA[
+service = LocationService(db_mock)
+result = service.get_location_history(tag_id="tag-uuid-abc-123", page=1, limit=10)
+                    ]]></Code>
+                </Step>
+            </Execution>
+            
+            <Assertions>
+                <Assertion type="Existence">
+                    <Description>The result should not be null and should be a list.</Description>
+                    <Code><![CDATA[
+assert result is not None
+assert isinstance(result, list)
+                    ]]></Code>
+                </Assertion>
+                <Assertion type="Equality">
+                    <Description>The number of returned location points should be 2.</Description>
+                    <Code><![CDATA[
+assert len(result) == 2
+                    ]]></Code>
+                </Assertion>
+                <Assertion type="Custom">
+                    <Description>The database `get_location_history_for_tag` method should have been called with the correct arguments.</Description>
+                    <Code><![CDATA[
+db_mock.get_location_history_for_tag.assert_called_once_with("tag-uuid-abc-123", page=1, limit=10)
+                    ]]></Code>
+                </Assertion>
+            </Assertions>
+        </TestCase>
+    </TestCases>
+
+    <ExpectedOutputs>
+        <Output testCaseId="test_get_location_history">
+            <Format>JSON</Format>
+            <Data><![CDATA[
+[
+    {"latitude": 40.7128, "longitude": -74.0060, "recorded_at": "2025-07-21T10:00:00Z"},
+    {"latitude": 40.7129, "longitude": -74.0061, "recorded_at": "2025-07-21T10:01:00Z"}
+]
+            ]]></Data>
+        </Output>
+    </ExpectedOutputs>
+
+    <TestConfiguration>
+        <Timeout unit="seconds">10</Timeout>
+    </TestConfiguration>
+</UnitTest>

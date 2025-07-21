@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UnitTest>
+    <Metadata>
+        <TestID>CSM_TAG_REG_001</TestID>
+        <TestName>Successful Tag Registration</TestName>
+        <Version>1.0</Version>
+        <Category>Unit</Category>
+        <Priority>Critical</Priority>
+        <Component>TagManagementService</Component>
+        <Function>register</Function>
+        <Description>Validates that a new tracking tag can be successfully registered and associated with a user and their cat.</Description>
+        <Tags>tag, registration, positive</Tags>
+        <Author>Gemini</Author>
+        <CreatedDate>2025-07-21</CreatedDate>
+        <LastModified>2025-07-21</LastModified>
+    </Metadata>
+
+    <Documentation>
+        <Reference type="Requirement" id="REQ-CAT-004">
+            This test validates a core part of the Cat Tracking Tag Integration feature.
+        </Reference>
+        <Reference type="Specification" id="API-POST-tags-register">
+            This test covers the API endpoint for registering a new tag as defined in `04_API_Specification.md`.
+        </Reference>
+        <Reference type="CodeUnderTest" path="src/cat_safety/tag_management_service.py">
+            The `register` function within the TagManagementService.
+        </Reference>
+    </Documentation>
+
+    <Environment>
+        <Language>Python</Language>
+        <Framework>pytest</Framework>
+        <Runtime>Python 3.10+</Runtime>
+        <Dependencies>
+            <Dependency name="pytest-mock" version="3.10.0">For mocking database interactions.</Dependency>
+        </Dependencies>
+    </Environment>
+
+    <TestData>
+        <InputData>
+            <DataSet id="valid_registration_request">
+                <Format>JSON</Format>
+                <Location>Inline</Location>
+                <Data><![CDATA[
+{
+    "user_id": "user-uuid-123",
+    "cat_id": "cat-uuid-456",
+    "tag_serial_number": "new-valid-serial-abcde12345"
+}
+                ]]></Data>
+            </DataSet>
+        </InputData>
+
+        <MockData>
+            <Mock id="database_mock">
+                <Type>DatabaseConnection</Type>
+                <Behavior><![CDATA[
+{
+    "find_tag_by_serial": {
+        "withArgs": ["new-valid-serial-abcde12345"],
+        "returns": null
+    },
+    "create_tag": {
+        "withArgs": [dict_containing({"tag_serial_number": "new-valid-serial-abcde12345"})],
+        "returns": {
+            "id": "new-tag-uuid-789",
+            "user_id": "user-uuid-123",
+            "cat_id": "cat-uuid-456",
+            "tag_serial_number": "new-valid-serial-abcde12345",
+            "status": "INACTIVE",
+            "battery_level": 100
+        }
+    }
+}
+                ]]></Behavior>
+            </Mock>
+        </MockData>
+    </TestData>
+
+    <TestCases>
+        <TestCase id="test_successful_registration">
+            <Description>Ensures a valid tag registration request results in a new tag record.</Description>
+            <TestType>Positive</TestType>
+            <Setup>
+                <Step>Initialize TagManagementService with a mocked database connection.</Step>
+            </Setup>
+            
+            <Execution>
+                <Step number="1">
+                    <Action>Call the `register` function with valid new tag data.</Action>
+                    <Input dataSetId="valid_registration_request"/>
+                    <Code><![CDATA[
+service = TagManagementService(db_mock)
+result = service.register(
+    user_id="user-uuid-123",
+    cat_id="cat-uuid-456",
+    serial_number="new-valid-serial-abcde12345"
+)
+                    ]]></Code>
+                </Step>
+            </Execution>
+            
+            <Assertions>
+                <Assertion type="Existence">
+                    <Description>The result should not be null and should have an ID.</Description>
+                    <Code><![CDATA[
+assert result is not None
+assert result["id"] == "new-tag-uuid-789"
+                    ]]></Code>
+                </Assertion>
+                <Assertion type="Equality">
+                    <Description>The status of the new tag should be INACTIVE.</Description>
+                    <Expected>'INACTIVE'</Expected>
+                    <Code><![CDATA[
+assert result["status"] == "INACTIVE"
+                    ]]></Code>
+                </Assertion>
+                <Assertion type="Custom">
+                    <Description>The database `create_tag` method should have been called exactly once with the correct data.</Description>
+                    <Code><![CDATA[
+db_mock.create_tag.assert_called_once_with(
+    user_id="user-uuid-123",
+    cat_id="cat-uuid-456",
+    tag_serial_number="new-valid-serial-abcde12345"
+)
+                    ]]></Code>
+                </Assertion>
+            </Assertions>
+        </TestCase>
+    </TestCases>
+
+    <ExpectedOutputs>
+        <Output testCaseId="test_successful_registration">
+            <Format>JSON</Format>
+            <Data><![CDATA[
+{
+    "id": "new-tag-uuid-789",
+    "status": "INACTIVE",
+    "tag_serial_number": "new-valid-serial-abcde12345"
+}
+            ]]></Data>
+        </Output>
+    </ExpectedOutputs>
+
+    <TestConfiguration>
+        <Timeout unit="seconds">10</Timeout>
+        <ContinueOnFailure>false</ContinueOnFailure>
+    </TestConfiguration>
+
+    <Coverage>
+        <Requirements>
+            <LineCoverage minimum="90"/>
+            <BranchCoverage minimum="85"/>
+        </Requirements>
+    </Coverage>
+</UnitTest>

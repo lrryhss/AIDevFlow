@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UnitTest>
+    <Metadata>
+        <TestID>CTL_ORDER_CREATE_002</TestID>
+        <TestName>Create Order - Out of Stock</TestName>
+        <Version>1.0</Version>
+        <Category>Unit</Category>
+        <Priority>High</Priority>
+        <Component>LogisticsService</Component>
+        <Function>create_order</Function>
+        <Description>Ensures the system prevents ordering a container that is out of stock.</Description>
+        <Tags>order, purchase, negative, inventory</Tags>
+        <Author>Gemini</Author>
+        <CreatedDate>2025-07-21</CreatedDate>
+        <LastModified>2025-07-21</LastModified>
+    </Metadata>
+
+    <Documentation>
+        <Reference type="Requirement" id="AC-004">
+            This test validates the acceptance criterion for handling out-of-stock scenarios.
+        </Reference>
+        <Reference type="CodeUnderTest" path="src/cat_logistics/logistics_service.py">
+            The `create_order` function within the LogisticsService.
+        </Reference>
+    </Documentation>
+
+    <Environment>
+        <Language>Python</Language>
+        <Framework>pytest</Framework>
+        <Runtime>Python 3.10+</Runtime>
+    </Environment>
+
+    <TestData>
+        <InputData>
+            <DataSet id="out_of_stock_order_request">
+                <Format>JSON</Format>
+                <Location>Inline</Location>
+                <Data><![CDATA[
+{
+    "user_id": "user-uuid-123",
+    "container_id": "container-uuid-3",
+    "order_type": "PURCHASE"
+}
+                ]]></Data>
+            </DataSet>
+        </InputData>
+
+        <MockData>
+            <Mock id="database_mock">
+                <Type>DatabaseConnection</Type>
+                <Behavior><![CDATA[
+{
+    "get_container_by_id": {
+        "withArgs": ["container-uuid-3"],
+        "returns": {"id": "container-uuid-3", "name": "Popular Carrier", "type": "PURCHASE", "price_cents": 7500}
+    }
+}
+                ]]></Behavior>
+            </Mock>
+            <Mock id="inventory_system_mock">
+                <Type>InventorySystem</Type>
+                <Behavior><![CDATA[
+{
+    "check_stock_levels": {
+        "returns": {"container-uuid-3": 0}
+    }
+}
+                ]]></Behavior>
+            </Mock>
+        </MockData>
+    </TestData>
+
+    <TestCases>
+        <TestCase id="test_create_order_out_of_stock">
+            <Description>Ensures that attempting to order an out-of-stock container raises an exception.</Description>
+            <TestType>Negative</TestType>
+            <Setup>
+                <Step>Initialize LogisticsService with a mocked inventory system that reports zero stock.</Step>
+            </Setup>
+            
+            <Execution>
+                <Step number="1">
+                    <Action>Call the `create_order` function for an out-of-stock item.</Action>
+                    <Input dataSetId="out_of_stock_order_request"/>
+                    <ExpectedException type="OutOfStockError">
+                        <Message>Container is out of stock.</Message>
+                    </ExpectedException>
+                    <Code><![CDATA[
+with pytest.raises(OutOfStockError) as excinfo:
+    service = LogisticsService(db_mock, inventory_mock, payment_mock)
+    service.create_order(
+        user_id="user-uuid-123",
+        container_id="container-uuid-3",
+        order_type="PURCHASE"
+    )
+                    ]]></Code>
+                </Step>
+            </Execution>
+            
+            <Assertions>
+                <Assertion type="Exception">
+                    <Description>An OutOfStockError should be raised.</Description>
+                    <Code><![CDATA[
+assert "out of stock" in str(excinfo.value)
+                    ]]></Code>
+                </Assertion>
+            </Assertions>
+        </TestCase>
+    </TestCases>
+
+    <TestConfiguration>
+        <Timeout unit="seconds">10</Timeout>
+    </TestConfiguration>
+</UnitTest>

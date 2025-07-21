@@ -1,3 +1,11 @@
-docs: Clarify design document directory structure in prompt
+feat(design): Create detailed design documents for Cat Travel App
 
-Updated `5_reference/5.4_requirements_to_design_prompt.md` to explicitly state that subdirectories will be created for each logical component in the design documentation, following the `ComponentName` pattern from `1_principles/1.3_design_principles.md`.
+This commit introduces a comprehensive set of design documents for the Cat Travel App, covering the overall application architecture and detailed designs for the three core components:
+
+- CatSafetyMonitoring
+- CatTravelLogistics
+- CatTravelPlanning
+
+The new documentation follows the standards outlined in the design principles, including executive summaries, system architecture, data models, API specifications, UI/UX design, integration guides, development guides, security practices, and testing strategies.
+
+This structured approach to design ensures clarity, consistency, and a solid foundation for the development phase.

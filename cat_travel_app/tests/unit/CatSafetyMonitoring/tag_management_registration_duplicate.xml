@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UnitTest>
+    <Metadata>
+        <TestID>CSM_TAG_REG_002</TestID>
+        <TestName>Duplicate Tag Registration</TestName>
+        <Version>1.0</Version>
+        <Category>Unit</Category>
+        <Priority>High</Priority>
+        <Component>TagManagementService</Component>
+        <Function>register</Function>
+        <Description>Ensures the system prevents the registration of a tag with a serial number that already exists.</Description>
+        <Tags>tag, registration, negative, duplicate</Tags>
+        <Author>Gemini</Author>
+        <CreatedDate>2025-07-21</CreatedDate>
+        <LastModified>2025-07-21</LastModified>
+    </Metadata>
+
+    <Documentation>
+        <Reference type="Requirement" id="REQ-CAT-004">
+            This test covers the business rule that each tracking tag must be unique.
+        </Reference>
+        <Reference type="CodeUnderTest" path="src/cat_safety/tag_management_service.py">
+            The `register` function within the TagManagementService.
+        </Reference>
+    </Documentation>
+
+    <Environment>
+        <Language>Python</Language>
+        <Framework>pytest</Framework>
+        <Runtime>Python 3.10+</Runtime>
+    </Environment>
+
+    <TestData>
+        <InputData>
+            <DataSet id="duplicate_registration_request">
+                <Format>JSON</Format>
+                <Location>Inline</Location>
+                <Data><![CDATA[
+{
+    "user_id": "user-uuid-123",
+    "cat_id": "cat-uuid-456",
+    "tag_serial_number": "existing-serial-xyz789"
+}
+                ]]></Data>
+            </DataSet>
+        </InputData>
+
+        <MockData>
+            <Mock id="database_mock">
+                <Type>DatabaseConnection</Type>
+                <Behavior><![CDATA[
+{
+    "find_tag_by_serial": {
+        "withArgs": ["existing-serial-xyz789"],
+        "returns": {
+            "id": "existing-tag-uuid-111",
+            "tag_serial_number": "existing-serial-xyz789"
+        }
+    },
+    "create_tag": {
+        "shouldNotBeCalled": true
+    }
+}
+                ]]></Behavior>
+            </Mock>
+        </MockData>
+    </TestData>
+
+    <TestCases>
+        <TestCase id="test_duplicate_registration">
+            <Description>Ensures that attempting to register an existing tag serial number raises a specific exception.</Description>
+            <TestType>Negative</TestType>
+            <Setup>
+                <Step>Initialize TagManagementService with a mocked database that returns an existing tag.</Step>
+            </Setup>
+            
+            <Execution>
+                <Step number="1">
+                    <Action>Call the `register` function with a duplicate serial number.</Action>
+                    <Input dataSetId="duplicate_registration_request"/>
+                    <ExpectedException type="DuplicateTagError">
+                        <Message>Tag with serial number existing-serial-xyz789 already exists.</Message>
+                    </ExpectedException>
+                    <Code><![CDATA[
+with pytest.raises(DuplicateTagError) as excinfo:
+    service = TagManagementService(db_mock)
+    service.register(
+        user_id="user-uuid-123",
+        cat_id="cat-uuid-456",
+        serial_number="existing-serial-xyz789"
+    )
+                    ]]></Code>
+                </Step>
+            </Execution>
+            
+            <Assertions>
+                <Assertion type="Exception">
+                    <Description>A DuplicateTagError should be raised.</Description>
+                    <Code><![CDATA[
+assert "already exists" in str(excinfo.value)
+                    ]]></Code>
+                </Assertion>
+                <Assertion type="Custom">
+                    <Description>The database `create_tag` method should not have been called.</Description>
+                    <Code><![CDATA[
+db_mock.create_tag.assert_not_called()
+                    ]]></Code>
+                </Assertion>
+            </Assertions>
+        </TestCase>
+    </TestCases>
+
+    <TestConfiguration>
+        <Timeout unit="seconds">10</Timeout>
+    </TestConfiguration>
+</UnitTest>

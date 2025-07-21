@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UnitTest>
+    <Metadata>
+        <TestID>CTP_CHECKLIST_CREATE_001</TestID>
+        <TestName>Create Checklist - Positive</TestName>
+        <Version>1.0</Version>
+        <Category>Unit</Category>
+        <Priority>High</Priority>
+        <Component>PlanningService</Component>
+        <Function>create_checklist</Function>
+        <Description>Validates that a new travel checklist can be created successfully.</Description>
+        <Tags>checklist, creation, positive</Tags>
+        <Author>Gemini</Author>
+        <CreatedDate>2025-07-21</CreatedDate>
+        <LastModified>2025-07-21</LastModified>
+    </Metadata>
+
+    <Documentation>
+        <Reference type="Requirement" id="AC-001">
+            This test validates the acceptance criterion for creating a travel checklist.
+        </Reference>
+        <Reference type="Specification" id="API-POST-checklists">
+            This test covers the API endpoint for creating a checklist.
+        </Reference>
+        <Reference type="CodeUnderTest" path="src/cat_planning/planning_service.py">
+            The `create_checklist` function within the PlanningService.
+        </Reference>
+    </Documentation>
+
+    <Environment>
+        <Language>Python</Language>
+        <Framework>pytest</Framework>
+        <Runtime>Python 3.10+</Runtime>
+    </Environment>
+
+    <TestData>
+        <InputData>
+            <DataSet id="valid_checklist_data">
+                <Format>JSON</Format>
+                <Location>Inline</Location>
+                <Data><![CDATA[
+{
+    "user_id": "user-uuid-123",
+    "trip_name": "Summer Vacation",
+    "items": ["Carrier", "Food", "Litter"]
+}
+                ]]></Data>
+            </DataSet>
+        </InputData>
+
+        <MockData>
+            <Mock id="database_mock">
+                <Type>DatabaseConnection</Type>
+                <Behavior><![CDATA[
+{
+    "create_checklist_with_items": {
+        "returns": {"id": "checklist-uuid-123", "trip_name": "Summer Vacation"}
+    }
+}
+                ]]></Behavior>
+            </Mock>
+        </MockData>
+    </TestData>
+
+    <TestCases>
+        <TestCase id="test_create_checklist">
+            <Description>Ensures that a valid request to create a checklist succeeds.</Description>
+            <TestType>Positive</TestType>
+            <Setup>
+                <Step>Initialize PlanningService with a mocked database connection.</Step>
+            </Setup>
+            
+            <Execution>
+                <Step number="1">
+                    <Action>Call the `create_checklist` function.</Action>
+                    <Input dataSetId="valid_checklist_data"/>
+                    <Code><![CDATA[
+service = PlanningService(db_mock, cache_mock, accommodation_api_mock)
+result = service.create_checklist(
+    user_id="user-uuid-123",
+    trip_name="Summer Vacation",
+    items=["Carrier", "Food", "Litter"]
+)
+                    ]]></Code>
+                </Step>
+            </Execution>
+            
+            <Assertions>
+                <Assertion type="Existence">
+                    <Description>The result should have a checklist ID.</Description>
+                    <Code><![CDATA[
+assert result["id"] == "checklist-uuid-123"
+                    ]]></Code>
+                </Assertion>
+                <Assertion type="Custom">
+                    <Description>The database `create_checklist_with_items` method should have been called correctly.</Description>
+                    <Code><![CDATA[
+db_mock.create_checklist_with_items.assert_called_once_with(
+    user_id="user-uuid-123",
+    trip_name="Summer Vacation",
+    items=["Carrier", "Food", "Litter"]
+)
+                    ]]></Code>
+                </Assertion>
+            </Assertions>
+        </TestCase>
+    </TestCases>
+
+    <TestConfiguration>
+        <Timeout unit="seconds">10</Timeout>
+    </TestConfiguration>
+</UnitTest>

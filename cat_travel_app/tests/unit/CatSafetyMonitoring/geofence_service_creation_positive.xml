@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UnitTest>
+    <Metadata>
+        <TestID>CSM_GEOFENCE_CREATE_001</TestID>
+        <TestName>Successful Geofence Creation</TestName>
+        <Version>1.0</Version>
+        <Category>Unit</Category>
+        <Priority>High</Priority>
+        <Component>GeofenceService</Component>
+        <Function>create_geofence</Function>
+        <Description>Validates that a new geofence can be created successfully with valid data.</Description>
+        <Tags>geofence, creation, positive</Tags>
+        <Author>Gemini</Author>
+        <CreatedDate>2025-07-21</CreatedDate>
+        <LastModified>2025-07-21</LastModified>
+    </Metadata>
+
+    <Documentation>
+        <Reference type="Requirement" id="AC-003">
+            This test validates the setup of a geofence, which is a prerequisite for receiving geofence alerts.
+        </Reference>
+        <Reference type="Specification" id="API-POST-geofences">
+            This test covers the API endpoint for creating a new geofence.
+        </Reference>
+        <Reference type="CodeUnderTest" path="src/cat_safety/geofence_service.py">
+            The `create_geofence` function within the GeofenceService.
+        </Reference>
+    </Documentation>
+
+    <Environment>
+        <Language>Python</Language>
+        <Framework>pytest</Framework>
+        <Runtime>Python 3.10+</Runtime>
+    </Environment>
+
+    <TestData>
+        <InputData>
+            <DataSet id="valid_geofence_data">
+                <Format>JSON</Format>
+                <Location>Inline</Location>
+                <Data><![CDATA[
+{
+    "user_id": "user-uuid-123",
+    "name": "Hotel Room",
+    "latitude": 34.0522,
+    "longitude": -118.2437,
+    "radius_meters": 50
+}
+                ]]></Data>
+            </DataSet>
+        </InputData>
+
+        <MockData>
+            <Mock id="database_mock">
+                <Type>DatabaseConnection</Type>
+                <Behavior><![CDATA[
+{
+    "create_geofence": {
+        "withArgs": [dict_containing({"name": "Hotel Room"})],
+        "returns": {
+            "id": "geofence-uuid-xyz-789",
+            "name": "Hotel Room",
+            "is_active": true
+        }
+    }
+}
+                ]]></Behavior>
+            </Mock>
+        </MockData>
+    </TestData>
+
+    <TestCases>
+        <TestCase id="test_successful_geofence_creation">
+            <Description>Ensures that a valid request to create a geofence results in a new geofence record.</Description>
+            <TestType>Positive</TestType>
+            <Setup>
+                <Step>Initialize GeofenceService with a mocked database connection.</Step>
+            </Setup>
+            
+            <Execution>
+                <Step number="1">
+                    <Action>Call the `create_geofence` function with valid data.</Action>
+                    <Input dataSetId="valid_geofence_data"/>
+                    <Code><![CDATA[
+service = GeofenceService(db_mock)
+result = service.create_geofence(
+    user_id="user-uuid-123",
+    name="Hotel Room",
+    latitude=34.0522,
+    longitude=-118.2437,
+    radius_meters=50
+)
+                    ]]></Code>
+                </Step>
+            </Execution>
+            
+            <Assertions>
+                <Assertion type="Existence">
+                    <Description>The result should have an ID.</Description>
+                    <Code><![CDATA[
+assert result["id"] == "geofence-uuid-xyz-789"
+                    ]]></Code>
+                </Assertion>
+                <Assertion type="Equality">
+                    <Description>The new geofence should be active by default.</Description>
+                    <Code><![CDATA[
+assert result["is_active"] is True
+                    ]]></Code>
+                </Assertion>
+                <Assertion type="Custom">
+                    <Description>The database `create_geofence` method should have been called with the correct data.</Description>
+                    <Code><![CDATA[
+db_mock.create_geofence.assert_called_once()
+                    ]]></Code>
+                </Assertion>
+            </Assertions>
+        </TestCase>
+    </TestCases>
+
+    <TestConfiguration>
+        <Timeout unit="seconds">10</Timeout>
+    </TestConfiguration>
+</UnitTest>

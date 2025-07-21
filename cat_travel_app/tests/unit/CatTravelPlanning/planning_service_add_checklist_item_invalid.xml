@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UnitTest>
+    <Metadata>
+        <TestID>CTP_CHECKLIST_ITEM_001</TestID>
+        <TestName>Add Checklist Item - Invalid</TestName>
+        <Version>1.0</Version>
+        <Category>Unit</Category>
+        <Priority>Medium</Priority>
+        <Component>PlanningService</Component>
+        <Function>add_checklist_item</Function>
+        <Description>Ensures the system prevents adding a checklist item with an empty name.</Description>
+        <Tags>checklist, item, negative, validation</Tags>
+        <Author>Gemini</Author>
+        <CreatedDate>2025-07-21</CreatedDate>
+        <LastModified>2025-07-21</LastModified>
+    </Metadata>
+
+    <Documentation>
+        <Reference type="Requirement" id="AC-004">
+            This test validates the acceptance criterion for preventing empty checklist items.
+        </Reference>
+        <Reference type="CodeUnderTest" path="src/cat_planning/planning_service.py">
+            The `add_checklist_item` function within the PlanningService.
+        </Reference>
+    </Documentation>
+
+    <Environment>
+        <Language>Python</Language>
+        <Framework>pytest</Framework>
+        <Runtime>Python 3.10+</Runtime>
+    </Environment>
+
+    <TestData>
+        <InputData>
+            <DataSet id="invalid_item_data">
+                <Format>JSON</Format>
+                <Location>Inline</Location>
+                <Data><![CDATA[
+{
+    "checklist_id": "checklist-uuid-123",
+    "item_name": ""
+}
+                ]]></Data>
+            </DataSet>
+        </InputData>
+
+        <MockData>
+            <Mock id="database_mock">
+                <Type>DatabaseConnection</Type>
+                <Behavior><![CDATA[
+{
+    "add_item_to_checklist": {
+        "shouldNotBeCalled": true
+    }
+}
+                ]]></Behavior>
+            </Mock>
+        </MockData>
+    </TestData>
+
+    <TestCases>
+        <TestCase id="test_add_empty_item">
+            <Description>Ensures that attempting to add an item with an empty name raises a validation error.</Description>
+            <TestType>Negative</TestType>
+            <Setup>
+                <Step>Initialize PlanningService with a mocked database connection.</Step>
+            </Setup>
+            
+            <Execution>
+                <Step number="1">
+                    <Action>Call the `add_checklist_item` function with an empty item name.</Action>
+                    <Input dataSetId="invalid_item_data"/>
+                    <ExpectedException type="ValidationError">
+                        <Message>Item name cannot be empty.</Message>
+                    </ExpectedException>
+                    <Code><![CDATA[
+with pytest.raises(ValidationError) as excinfo:
+    service = PlanningService(db_mock, cache_mock, accommodation_api_mock)
+    service.add_checklist_item(
+        checklist_id="checklist-uuid-123",
+        item_name=""
+    )
+                    ]]></Code>
+                </Step>
+            </Execution>
+            
+            <Assertions>
+                <Assertion type="Exception">
+                    <Description>A ValidationError should be raised.</Description>
+                    <Code><![CDATA[
+assert "cannot be empty" in str(excinfo.value)
+                    ]]></Code>
+                </Assertion>
+                <Assertion type="Custom">
+                    <Description>The database `add_item_to_checklist` method should not have been called.</Description>
+                    <Code><![CDATA[
+db_mock.add_item_to_checklist.assert_not_called()
+                    ]]></Code>
+                </Assertion>
+            </Assertions>
+        </TestCase>
+    </TestCases>
+
+    <TestConfiguration>
+        <Timeout unit="seconds">10</Timeout>
+    </TestConfiguration>
+</UnitTest>

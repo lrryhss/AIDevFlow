@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UnitTest>
+    <Metadata>
+        <TestID>CSM_NOTIFY_GEOFENCE_001</TestID>
+        <TestName>Geofence Exit Alert</TestName>
+        <Version>1.0</Version>
+        <Category>Unit</Category>
+        <Priority>Critical</Priority>
+        <Component>NotificationService</Component>
+        <Function>send_geofence_alert</Function>
+        <Description>Validates that the NotificationService correctly formats and sends a push notification for a geofence exit event.</Description>
+        <Tags>notification, geofence, alert</Tags>
+        <Author>Gemini</Author>
+        <CreatedDate>2025-07-21</CreatedDate>
+        <LastModified>2025-07-21</LastModified>
+    </Metadata>
+
+    <Documentation>
+        <Reference type="Requirement" id="AC-003">
+            This test validates the final step of the geofence alert feature: sending the notification.
+        </Reference>
+        <Reference type="CodeUnderTest" path="src/cat_safety/notification_service.py">
+            The `send_geofence_alert` function within the NotificationService.
+        </Reference>
+    </Documentation>
+
+    <Environment>
+        <Language>Python</Language>
+        <Framework>pytest</Framework>
+        <Runtime>Python 3.10+</Runtime>
+    </Environment>
+
+    <TestData>
+        <InputData>
+            <DataSet id="geofence_exit_event">
+                <Format>JSON</Format>
+                <Location>Inline</Location>
+                <Data><![CDATA[
+{
+    "user_id": "user-uuid-123",
+    "device_token": "device-token-xyz",
+    "geofence_name": "Hotel Room",
+    "cat_name": "Whiskers",
+    "alert_type": "EXIT"
+}
+                ]]></Data>
+            </DataSet>
+        </InputData>
+
+        <MockData>
+            <Mock id="push_notification_service_mock">
+                <Type>PushNotificationService</Type>
+                <Behavior><![CDATA[
+{
+    "send": {
+        "withArgs": [dict_containing({"token": "device-token-xyz"})],
+        "returns": {"success": true, "message_id": "push-msg-123"}
+    }
+}
+                ]]></Behavior>
+            </Mock>
+        </MockData>
+    </TestData>
+
+    <TestCases>
+        <TestCase id="test_send_geofence_exit_alert">
+            <Description>Ensures that a geofence exit event is correctly processed and sent as a push notification.</Description>
+            <TestType>Positive</TestType>
+            <Setup>
+                <Step>Initialize NotificationService with a mocked push notification service.</Step>
+            </Setup>
+            
+            <Execution>
+                <Step number="1">
+                    <Action>Call the `send_geofence_alert` function with an exit event.</Action>
+                    <Input dataSetId="geofence_exit_event"/>
+                    <Code><![CDATA[
+service = NotificationService(push_service_mock)
+result = service.send_geofence_alert(
+    user_id="user-uuid-123",
+    device_token="device-token-xyz",
+    geofence_name="Hotel Room",
+    cat_name="Whiskers",
+    alert_type="EXIT"
+)
+                    ]]></Code>
+                </Step>
+            </Execution>
+            
+            <Assertions>
+                <Assertion type="Existence">
+                    <Description>The result should indicate success.</Description>
+                    <Code><![CDATA[
+assert result["success"] is True
+                    ]]></Code>
+                </Assertion>
+                <Assertion type="Custom">
+                    <Description>The push notification service's `send` method should have been called with a correctly formatted payload.</Description>
+                    <Code><![CDATA[
+push_service_mock.send.assert_called_once()
+args, _ = push_service_mock.send.call_args
+assert args[0]["token"] == "device-token-xyz"
+assert "Whiskers has left the Hotel Room safe zone" in args[0]["message"]["body"]
+                    ]]></Code>
+                </Assertion>
+            </Assertions>
+        </TestCase>
+    </TestCases>
+
+    <TestConfiguration>
+        <Timeout unit="seconds">10</Timeout>
+    </TestConfiguration>
+</UnitTest>

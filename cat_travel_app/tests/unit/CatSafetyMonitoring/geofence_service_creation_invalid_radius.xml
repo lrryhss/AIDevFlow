@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UnitTest>
+    <Metadata>
+        <TestID>CSM_GEOFENCE_CREATE_002</TestID>
+        <TestName>Invalid Geofence Radius</TestName>
+        <Version>1.0</Version>
+        <Category>Unit</Category>
+        <Priority>Medium</Priority>
+        <Component>GeofenceService</Component>
+        <Function>create_geofence</Function>
+        <Description>Ensures the system rejects the creation of a geofence with an invalid (zero or negative) radius.</Description>
+        <Tags>geofence, creation, negative, validation</Tags>
+        <Author>Gemini</Author>
+        <CreatedDate>2025-07-21</CreatedDate>
+        <LastModified>2025-07-21</LastModified>
+    </Metadata>
+
+    <Documentation>
+        <Reference type="Requirement" id="AC-006">
+            This test validates the acceptance criterion for preventing the creation of an invalid geofence.
+        </Reference>
+        <Reference type="CodeUnderTest" path="src/cat_safety/geofence_service.py">
+            The `create_geofence` function within the GeofenceService.
+        </Reference>
+    </Documentation>
+
+    <Environment>
+        <Language>Python</Language>
+        <Framework>pytest</Framework>
+        <Runtime>Python 3.10+</Runtime>
+    </Environment>
+
+    <TestData>
+        <InputData>
+            <DataSet id="invalid_radius_data">
+                <Format>JSON</Format>
+                <Location>Inline</Location>
+                <Data><![CDATA[
+{
+    "user_id": "user-uuid-123",
+    "name": "Invalid Geofence",
+    "latitude": 34.0522,
+    "longitude": -118.2437,
+    "radius_meters": 0
+}
+                ]]></Data>
+            </DataSet>
+        </InputData>
+
+        <MockData>
+            <Mock id="database_mock">
+                <Type>DatabaseConnection</Type>
+                <Behavior><![CDATA[
+{
+    "create_geofence": {
+        "shouldNotBeCalled": true
+    }
+}
+                ]]></Behavior>
+            </Mock>
+        </MockData>
+    </TestData>
+
+    <TestCases>
+        <TestCase id="test_invalid_radius">
+            <Description>Ensures that attempting to create a geofence with a zero radius raises a validation error.</Description>
+            <TestType>Negative</TestType>
+            <Setup>
+                <Step>Initialize GeofenceService with a mocked database connection.</Step>
+            </Setup>
+            
+            <Execution>
+                <Step number="1">
+                    <Action>Call the `create_geofence` function with a zero radius.</Action>
+                    <Input dataSetId="invalid_radius_data"/>
+                    <ExpectedException type="ValidationError">
+                        <Message>Radius must be a positive number.</Message>
+                    </ExpectedException>
+                    <Code><![CDATA[
+with pytest.raises(ValidationError) as excinfo:
+    service = GeofenceService(db_mock)
+    service.create_geofence(
+        user_id="user-uuid-123",
+        name="Invalid Geofence",
+        latitude=34.0522,
+        longitude=-118.2437,
+        radius_meters=0
+    )
+                    ]]></Code>
+                </Step>
+            </Execution>
+            
+            <Assertions>
+                <Assertion type="Exception">
+                    <Description>A ValidationError should be raised.</Description>
+                    <Code><![CDATA[
+assert "must be a positive number" in str(excinfo.value)
+                    ]]></Code>
+                </Assertion>
+                <Assertion type="Custom">
+                    <Description>The database `create_geofence` method should not have been called.</Description>
+                    <Code><![CDATA[
+db_mock.create_geofence.assert_not_called()
+                    ]]></Code>
+                </Assertion>
+            </Assertions>
+        </TestCase>
+    </TestCases>
+
+    <TestConfiguration>
+        <Timeout unit="seconds">10</Timeout>
+    </TestConfiguration>
+</UnitTest>

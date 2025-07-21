@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UnitTest>
+    <Metadata>
+        <TestID>CTP_ACCOM_SEARCH_001</TestID>
+        <TestName>Search Accommodations - Positive</TestName>
+        <Version>1.0</Version>
+        <Category>Unit</Category>
+        <Priority>High</Priority>
+        <Component>PlanningService</Component>
+        <Function>search_accommodations</Function>
+        <Description>Validates that a search for cat-friendly accommodations returns a filtered list.</Description>
+        <Tags>accommodation, search, positive</Tags>
+        <Author>Gemini</Author>
+        <CreatedDate>2025-07-21</CreatedDate>
+        <LastModified>2025-07-21</LastModified>
+    </Metadata>
+
+    <Documentation>
+        <Reference type="Requirement" id="REQ-CAT-001">
+            This test validates the core functionality of searching for cat-friendly accommodations.
+        </Reference>
+        <Reference type="Specification" id="API-GET-accommodations-search">
+            This test covers the API endpoint for accommodation search.
+        </Reference>
+        <Reference type="CodeUnderTest" path="src/cat_planning/planning_service.py">
+            The `search_accommodations` function within the PlanningService.
+        </Reference>
+    </Documentation>
+
+    <Environment>
+        <Language>Python</Language>
+        <Framework>pytest</Framework>
+        <Runtime>Python 3.10+</Runtime>
+    </Environment>
+
+    <TestData>
+        <MockData>
+            <Mock id="accommodation_api_mock">
+                <Type>AccommodationAPI</Type>
+                <Behavior><![CDATA[
+{
+    "search": {
+        "withArgs": ["New York"],
+        "returns": [
+            {"id": "hotel-1", "name": "The Grand Hotel", "pet_friendly": true, "pet_policy": {"allows_cats": true}},
+            {"id": "hotel-2", "name": "City Center Inn", "pet_friendly": true, "pet_policy": {"allows_cats": false}},
+            {"id": "hotel-3", "name": "The Plaza", "pet_friendly": false}
+        ]
+    }
+}
+                ]]></Behavior>
+            </Mock>
+            <Mock id="cache_mock">
+                <Type>RedisCache</Type>
+                <Behavior><![CDATA[
+{
+    "get": {"returns": null},
+    "set": {"is_called": true}
+}
+                ]]></Behavior>
+            </Mock>
+        </MockData>
+    </TestData>
+
+    <TestCases>
+        <TestCase id="test_search_accommodations">
+            <Description>Ensures that the search results are correctly filtered to only include cat-friendly accommodations.</Description>
+            <TestType>Positive</TestType>
+            <Setup>
+                <Step>Initialize PlanningService with mocked accommodation API and cache connections.</Step>
+            </Setup>
+            
+            <Execution>
+                <Step number="1">
+                    <Action>Call the `search_accommodations` function.</Action>
+                    <Code><![CDATA[
+service = PlanningService(db_mock, cache_mock, accommodation_api_mock)
+result = service.search_accommodations(location="New York")
+                    ]]></Code>
+                </Step>
+            </Execution>
+            
+            <Assertions>
+                <Assertion type="Existence">
+                    <Description>The result should not be null and should be a list.</Description>
+                    <Code><![CDATA[
+assert result is not None
+assert isinstance(result, list)
+                    ]]></Code>
+                </Assertion>
+                <Assertion type="Equality">
+                    <Description>The number of returned accommodations should be 1 (only the cat-friendly one).</Description>
+                    <Code><![CDATA[
+assert len(result) == 1
+assert result[0]["name"] == "The Grand Hotel"
+                    ]]></Code>
+                </Assertion>
+                <Assertion type="Custom">
+                    <Description>The cache's `set` method should have been called to store the results.</Description>
+                    <Code><![CDATA[
+cache_mock.set.assert_called_once()
+                    ]]></Code>
+                </Assertion>
+            </Assertions>
+        </TestCase>
+    </TestCases>
+
+    <TestConfiguration>
+        <Timeout unit="seconds">10</Timeout>
+    </TestConfiguration>
+</UnitTest>

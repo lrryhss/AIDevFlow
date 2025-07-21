@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UnitTest>
+    <Metadata>
+        <TestID>CTL_ORDER_CREATE_001</TestID>
+        <TestName>Create Purchase Order - Positive</TestName>
+        <Version>1.0</Version>
+        <Category>Unit</Category>
+        <Priority>Critical</Priority>
+        <Component>LogisticsService</Component>
+        <Function>create_order</Function>
+        <Description>Validates that a purchase order can be created successfully.</Description>
+        <Tags>order, purchase, positive</Tags>
+        <Author>Gemini</Author>
+        <CreatedDate>2025-07-21</CreatedDate>
+        <LastModified>2025-07-21</LastModified>
+    </Metadata>
+
+    <Documentation>
+        <Reference type="Requirement" id="AC-002">
+            This test validates the acceptance criterion for the order creation process.
+        </Reference>
+        <Reference type="Specification" id="API-POST-orders">
+            This test covers the API endpoint for creating an order.
+        </Reference>
+        <Reference type="CodeUnderTest" path="src/cat_logistics/logistics_service.py">
+            The `create_order` function within the LogisticsService.
+        </Reference>
+    </Documentation>
+
+    <Environment>
+        <Language>Python</Language>
+        <Framework>pytest</Framework>
+        <Runtime>Python 3.10+</Runtime>
+    </Environment>
+
+    <TestData>
+        <InputData>
+            <DataSet id="valid_purchase_order_request">
+                <Format>JSON</Format>
+                <Location>Inline</Location>
+                <Data><![CDATA[
+{
+    "user_id": "user-uuid-123",
+    "container_id": "container-uuid-1",
+    "order_type": "PURCHASE"
+}
+                ]]></Data>
+            </DataSet>
+        </InputData>
+
+        <MockData>
+            <Mock id="database_mock">
+                <Type>DatabaseConnection</Type>
+                <Behavior><![CDATA[
+{
+    "get_container_by_id": {
+        "withArgs": ["container-uuid-1"],
+        "returns": {"id": "container-uuid-1", "name": "Basic Carrier", "type": "PURCHASE", "price_cents": 5000}
+    },
+    "create_order": {
+        "returns": {"id": "order-uuid-123", "status": "PENDING"}
+    }
+}
+                ]]></Behavior>
+            </Mock>
+            <Mock id="inventory_system_mock">
+                <Type>InventorySystem</Type>
+                <Behavior><![CDATA[
+{
+    "check_stock_levels": {
+        "returns": {"container-uuid-1": 10}
+    },
+    "reserve_item": {
+        "returns": true
+    }
+}
+                ]]></Behavior>
+            </Mock>
+            <Mock id="payment_gateway_mock">
+                <Type>PaymentGateway</Type>
+                <Behavior><![CDATA[
+{
+    "create_payment_intent": {
+        "returns": {"client_secret": "pi_123_secret_456"}
+    }
+}
+                ]]></Behavior>
+            </Mock>
+        </MockData>
+    </TestData>
+
+    <TestCases>
+        <TestCase id="test_create_purchase_order">
+            <Description>Ensures that a valid request to create a purchase order succeeds.</Description>
+            <TestType>Positive</TestType>
+            <Setup>
+                <Step>Initialize LogisticsService with mocked dependencies.</Step>
+            </Setup>
+            
+            <Execution>
+                <Step number="1">
+                    <Action>Call the `create_order` function for a purchase.</Action>
+                    <Input dataSetId="valid_purchase_order_request"/>
+                    <Code><![CDATA[
+service = LogisticsService(db_mock, inventory_mock, payment_mock)
+result = service.create_order(
+    user_id="user-uuid-123",
+    container_id="container-uuid-1",
+    order_type="PURCHASE"
+)
+                    ]]></Code>
+                </Step>
+            </Execution>
+            
+            <Assertions>
+                <Assertion type="Existence">
+                    <Description>The result should have an order ID and a payment intent client secret.</Description>
+                    <Code><![CDATA[
+assert result["order_id"] == "order-uuid-123"
+assert result["payment_intent_client_secret"] == "pi_123_secret_456"
+                    ]]></Code>
+                </Assertion>
+                <Assertion type="Custom">
+                    <Description>The inventory system, database, and payment gateway should have been called correctly.</Description>
+                    <Code><![CDATA[
+inventory_mock.reserve_item.assert_called_once_with("container-uuid-1", 1)
+db_mock.create_order.assert_called_once()
+payment_mock.create_payment_intent.assert_called_once_with(amount=5000)
+                    ]]></Code>
+                </Assertion>
+            </Assertions>
+        </TestCase>
+    </TestCases>
+
+    <TestConfiguration>
+        <Timeout unit="seconds">10</Timeout>
+    </TestConfiguration>
+</UnitTest>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UnitTest>
+    <Metadata>
+        <TestID>CTL_CATALOG_GET_001</TestID>
+        <TestName>Get Container Catalog - Positive</TestName>
+        <Version>1.0</Version>
+        <Category>Unit</Category>
+        <Priority>High</Priority>
+        <Component>LogisticsService</Component>
+        <Function>get_containers</Function>
+        <Description>Validates that the list of available containers can be retrieved successfully.</Description>
+        <Tags>catalog, logistics, positive</Tags>
+        <Author>Gemini</Author>
+        <CreatedDate>2025-07-21</CreatedDate>
+        <LastModified>2025-07-21</LastModified>
+    </Metadata>
+
+    <Documentation>
+        <Reference type="Requirement" id="AC-001">
+            This test validates the acceptance criterion for browsing available containers.
+        </Reference>
+        <Reference type="Specification" id="API-GET-containers">
+            This test covers the API endpoint for retrieving the container catalog.
+        </Reference>
+        <Reference type="CodeUnderTest" path="src/cat_logistics/logistics_service.py">
+            The `get_containers` function within the LogisticsService.
+        </Reference>
+    </Documentation>
+
+    <Environment>
+        <Language>Python</Language>
+        <Framework>pytest</Framework>
+        <Runtime>Python 3.10+</Runtime>
+    </Environment>
+
+    <TestData>
+        <MockData>
+            <Mock id="database_mock">
+                <Type>DatabaseConnection</Type>
+                <Behavior><![CDATA[
+{
+    "get_all_containers": {
+        "withArgs": ["PURCHASE"],
+        "returns": [
+            {"id": "container-uuid-1", "name": "Basic Carrier", "type": "PURCHASE", "price_cents": 5000},
+            {"id": "container-uuid-2", "name": "Deluxe Carrier", "type": "PURCHASE", "price_cents": 12000}
+        ]
+    }
+}
+                ]]></Behavior>
+            </Mock>
+            <Mock id="inventory_system_mock">
+                <Type>InventorySystem</Type>
+                <Behavior><![CDATA[
+{
+    "get_stock_levels": {
+        "withArgs": [["container-uuid-1", "container-uuid-2"]],
+        "returns": {
+            "container-uuid-1": 10,
+            "container-uuid-2": 5
+        }
+    }
+}
+                ]]></Behavior>
+            </Mock>
+        </MockData>
+    </TestData>
+
+    <TestCases>
+        <TestCase id="test_get_purchase_catalog">
+            <Description>Ensures that a valid request for the purchase catalog returns a list of in-stock containers.</Description>
+            <TestType>Positive</TestType>
+            <Setup>
+                <Step>Initialize LogisticsService with mocked database and inventory system connections.</Step>
+            </Setup>
+            
+            <Execution>
+                <Step number="1">
+                    <Action>Call the `get_containers` function for purchasable items.</Action>
+                    <Code><![CDATA[
+service = LogisticsService(db_mock, inventory_mock, payment_mock)
+result = service.get_containers(type="PURCHASE")
+                    ]]></Code>
+                </Step>
+            </Execution>
+            
+            <Assertions>
+                <Assertion type="Existence">
+                    <Description>The result should not be null and should be a list.</Description>
+                    <Code><![CDATA[
+assert result is not None
+assert isinstance(result, list)
+                    ]]></Code>
+                </Assertion>
+                <Assertion type="Equality">
+                    <Description>The number of returned containers should be 2.</Description>
+                    <Code><![CDATA[
+assert len(result) == 2
+                    ]]></Code>
+                </Assertion>
+                <Assertion type="Custom">
+                    <Description>The inventory system should have been checked for stock levels.</Description>
+                    <Code><![CDATA[
+inventory_mock.get_stock_levels.assert_called_once()
+                    ]]></Code>
+                </Assertion>
+            </Assertions>
+        </TestCase>
+    </TestCases>
+
+    <TestConfiguration>
+        <Timeout unit="seconds">10</Timeout>
+    </TestConfiguration>
+</UnitTest>
