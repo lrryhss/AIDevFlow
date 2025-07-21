@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ImplementationGuide>
+    <Metadata>
+        <GuideID>CTA_P3_003</GuideID>
+        <Title>Phase 3: WebSocket Integration</Title>
+        <Version>1.0</Version>
+        <Category>Integration</Category>
+        <Priority>Medium</Priority>
+        <EstimatedTime>3 hours</EstimatedTime>
+        <Description>This guide covers the implementation of the WebSocket for providing real-time updates to the mobile client.</Description>
+        <Tags>websocket, real-time, integration</Tags>
+        <GitBranchName>feature/P3_003_WebSocket_Integration</GitBranchName>
+    </Metadata>
+
+    <Purpose>To enable real-time communication between the backend and the mobile application for live updates.</Purpose>
+
+    <ScopeAndObjectives>
+        <Objective>Implement a WebSocket connection manager.</Objective>
+        <Objective>Create a WebSocket endpoint for client connections.</Objective>
+        <Objective>Integrate real-time location updates via WebSocket.</Objective>
+    </ScopeAndObjectives>
+
+    <TechnicalStack>
+        <Language>Python</Language>
+        <Framework>FastAPI</Framework>
+        <Tool>WebSocket</Tool>
+    </TechnicalStack>
+
+    <Prerequisites>
+        <Prerequisite type="Guide" id="CTA_P2_002">SafetyService tag and location functionality is implemented.</Prerequisite>
+    </Prerequisites>
+
+    <DocumentationReferences>
+        <Reference type="API" href="../../design/CatSafetyMonitoring/04_API_Specification.md"/>
+    </DocumentationReferences>
+
+    <ImplementationSteps>
+        <Step number="1" name="Implement WebSocket Manager">
+            <Description>Create a manager to handle WebSocket connections and broadcast messages.</Description>
+            <Tasks>
+                <Task type="code" id="websocket_manager">
+                    <Description>Implement a connection manager class.</Description>
+                    <Code language="python" file="src/shared/websocket_manager.py"><![CDATA[
+from typing import Dict
+from fastapi import WebSocket, WebSocketDisconnect
+
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections: Dict[str, WebSocket] = {}
+
+    async def connect(self, user_id: str, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections[user_id] = websocket
+
+    def disconnect(self, user_id: str):
+        del self.active_connections[user_id]
+
+    async def broadcast(self, user_id: str, message: str):
+        if user_id in self.active_connections:
+            await self.active_connections[user_id].send_text(message)
+                    ]]></Code>
+                </Task>
+            </Tasks>
+        </Step>
+        <Step number="2" name="Implement WebSocket Endpoint">
+            <Description>Create the WebSocket endpoint that the client will connect to.</Description>
+            <Tasks>
+                <Task type="code" id="websocket_endpoint">
+                    <Description>Create the `/ws` endpoint in the main application file.</Description>
+                    <Code language="python" file="src/main.py"><![CDATA[
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Depends
+from src.shared.websocket_manager import ConnectionManager
+# Assuming get_current_user and User model are defined elsewhere
+
+app = FastAPI()
+manager = ConnectionManager()
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket, user: User = Depends(get_current_user)):
+    await manager.connect(user.id, websocket)
+    try:
+        while True:
+            # Keep connection alive, or handle incoming messages if needed
+            await websocket.receive_text() 
+    except WebSocketDisconnect:
+        manager.disconnect(user.id)
+                    ]]></Code>
+                </Task>
+            </Tasks>
+        </Step>
+        <Step number="3" name="Broadcast Location Updates">
+            <Description>Modify the `SafetyService` to broadcast location updates to connected clients via the WebSocket.</Description>
+            <Tasks>
+                <Task type="code" id="broadcast_updates">
+                    <Description>In the `ingest_location` function of the `SafetyService`, after publishing to the message queue, also broadcast to the WebSocket.</Description>
+                    <Code language="python" file="src/cat_safety/safety_service.py"><![CDATA[
+import json
+from src.main import manager # Assuming manager is accessible
+
+# Inside SafetyService.ingest_location...
+# ... after self.mq.publish(...)
+
+# Broadcast to WebSocket
+await manager.broadcast(user_id, json.dumps({
+    "event": "location.update",
+    "data": {"tag_id": tag_id, "latitude": latitude, "longitude": longitude}
+}))
+                    ]]></Code>
+                </Task>
+            </Tasks>
+        </Step>
+    </ImplementationSteps>
+
+    <ValidationCriteria>
+        <Checklist>
+            <Item>The `ConnectionManager` class is implemented and manages WebSocket connections.</Item>
+            <Item>A WebSocket endpoint (`/ws`) is created and accepts client connections.</Item>
+            <Item>The `SafetyService` broadcasts real-time location updates to connected clients via the WebSocket.</Item>
+        </Checklist>
+    </ValidationCriteria>
+</ImplementationGuide>

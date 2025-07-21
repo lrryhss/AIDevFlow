@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ImplementationGuide>
+    <Metadata>
+        <GuideID>CTA_P1_003</GuideID>
+        <Title>Phase 1: User and Cat Services</Title>
+        <Version>1.0</Version>
+        <Category>Core</Category>
+        <Priority>High</Priority>
+        <EstimatedTime>4 hours</EstimatedTime>
+        <Description>This guide covers the implementation of the shared services for managing user accounts and cat profiles.</Description>
+        <Tags>user, cat, service, core</Tags>
+        <GitBranchName>feature/P1_003_User_Cat_Services</GitBranchName>
+    </Metadata>
+
+    <Purpose>To create the core services for managing users and their cats, which will be used by all other components.</Purpose>
+
+    <ScopeAndObjectives>
+        <Objective>Implement a `UserService` with basic CRUD operations.</Objective>
+        <Objective>Implement a `CatService` with basic CRUD operations.</Objective>
+    </ScopeAndObjectives>
+
+    <TechnicalStack>
+        <Language>Python</Language>
+        <Framework>FastAPI</Framework>
+    </TechnicalStack>
+
+    <Prerequisites>
+        <Prerequisite type="Guide" id="CTA_P1_002">Database schemas are created.</Prerequisite>
+    </Prerequisites>
+
+    <ImplementationSteps>
+        <Step number="1" name="Create Service and Repository Files">
+            <Description>Set up the basic file structure for the shared services.</Description>
+            <Tasks>
+                <Task type="file" path="src/shared/user_service.py"/>
+                <Task type="file" path="src/shared/cat_service.py"/>
+            </Tasks>
+        </Step>
+        <Step number="2" name="Implement User Service">
+            <Description>Implement the service for managing user accounts.</Description>
+            <Tasks>
+                <Task type="code" id="user_service_implementation">
+                    <Description>Create the `UserService` class with basic CRUD operations.</Description>
+                    <Code language="python" file="src/shared/user_service.py"><![CDATA[
+class UserService:
+    def __init__(self, db_session):
+        self.db = db_session
+
+    def create_user(self, user_data: dict):
+        # Logic to create a new user
+        pass
+
+    def get_user_by_id(self, user_id: str):
+        # Logic to retrieve a user by their ID
+        pass
+                    ]]></Code>
+                </Task>
+            </Tasks>
+        </Step>
+        <Step number="3" name="Implement Cat Service">
+            <Description>Implement the service for managing cat profiles.</Description>
+            <Tasks>
+                <Task type="code" id="cat_service_implementation">
+                    <Description>Create the `CatService` class with basic CRUD operations.</Description>
+                    <Code language="python" file="src/shared/cat_service.py"><![CDATA[
+class CatService:
+    def __init__(self, db_session):
+        self.db = db_session
+
+    def create_cat_profile(self, user_id: str, cat_data: dict):
+        # Logic to create a new cat profile for a user
+        pass
+
+    def get_cats_for_user(self, user_id: str):
+        # Logic to retrieve all cat profiles for a user
+        pass
+                    ]]></Code>
+                </Task>
+            </Tasks>
+        </Step>
+    </ImplementationSteps>
+
+    <ValidationCriteria>
+        <Checklist>
+            <Item>The `UserService` and `CatService` classes are created.</Item>
+            <Item>The services provide basic CRUD functionality for users and cats.</Item>
+            <Item>Unit tests for both services pass.</Item>
+        </Checklist>
+    </ValidationCriteria>
+</ImplementationGuide>

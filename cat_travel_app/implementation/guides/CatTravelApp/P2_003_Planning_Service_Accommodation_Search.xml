@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ImplementationGuide>
+    <Metadata>
+        <GuideID>CTA_P2_003</GuideID>
+        <Title>Phase 2: Planning Service - Accommodation Search</Title>
+        <Version>1.0</Version>
+        <Category>Core</Category>
+        <Priority>High</Priority>
+        <EstimatedTime>5 hours</EstimatedTime>
+        <Description>This guide covers the implementation of the accommodation search functionality in the PlanningService.</Description>
+        <Tags>planning, service, accommodation, search</Tags>
+        <GitBranchName>feature/P2_003_Planning_Service_Accommodation_Search</GitBranchName>
+    </Metadata>
+
+    <Purpose>To enable users to search for cat-friendly accommodations by integrating with external APIs.</Purpose>
+
+    <ScopeAndObjectives>
+        <Objective>Implement a client to connect to external accommodation APIs.</Objective>
+        <Objective>Implement search, filtering, and caching logic in the `PlanningService`.</Objective>
+    </ScopeAndObjectives>
+
+    <TechnicalStack>
+        <Language>Python</Language>
+        <Framework>FastAPI</Framework>
+        <Tool>Redis</Tool>
+    </TechnicalStack>
+
+    <Prerequisites>
+        <Prerequisite type="Guide" id="CTA_P1_004">PlanningService checklist functionality is implemented.</Prerequisite>
+    </Prerequisites>
+
+    <DocumentationReferences>
+        <Reference type="Design" href="../../design/CatTravelPlanning/03_Component_Design.md"/>
+        <Reference type="API" href="../../design/CatTravelPlanning/04_API_Specification.md"/>
+    </DocumentationReferences>
+
+    <TestReferences>
+        <UnitTest id="CTP_ACCOM_SEARCH_001" path="../../tests/unit/CatTravelPlanning/planning_service_search_accommodations_positive.xml"/>
+    </TestReferences>
+
+    <ImplementationSteps>
+        <Step number="1" name="Implement Accommodation API Client">
+            <Description>Create a client to interact with the external accommodation API.</Description>
+            <Tasks>
+                <Task type="code" id="accommodation_api_client">
+                    <Description>Create a class to handle API calls to the accommodation provider.</Description>
+                    <Code language="python" file="src/cat_planning/accommodation_api_client.py"><![CDATA[
+class AccommodationApiClient:
+    def __init__(self, api_key):
+        self.api_key = api_key
+
+    def search(self, location: str, start_date: str, end_date: str):
+        # Logic to call the external API
+        pass
+                    ]]></Code>
+                </Task>
+            </Tasks>
+        </Step>
+        <Step number="2" name="Integrate with PlanningService">
+            <Description>Integrate the API client into the `PlanningService`.</Description>
+            <Tasks>
+                <Task type="code" id="planning_service_accommodation_integration">
+                    <Description>Implement the `search_accommodations` function.</Description>
+                    <Code language="python" file="src/cat_planning/planning_service.py"><![CDATA[
+# In PlanningService class
+def search_accommodations(self, location: str, start_date: str, end_date: str):
+    # 1. Check cache
+    # 2. Call accommodation API client
+    # 3. Filter for cat-friendly properties
+    # 4. Store in cache
+    # 5. Return results
+    pass
+                    ]]></Code>
+                </Task>
+            </Tasks>
+        </Step>
+    </ImplementationSteps>
+
+    <ValidationCriteria>
+        <Checklist>
+            <Item>The `AccommodationApiClient` is implemented.</Item>
+            <Item>The `PlanningService` correctly searches and filters accommodations.</Item>
+            <Item>All associated unit tests pass.</Item>
+        </Checklist>
+    </ValidationCriteria>
+</ImplementationGuide>

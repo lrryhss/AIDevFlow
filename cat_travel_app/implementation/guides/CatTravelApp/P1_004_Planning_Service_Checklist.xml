@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ImplementationGuide>
+    <Metadata>
+        <GuideID>CTA_P1_004</GuideID>
+        <Title>Phase 1: Planning Service - Checklist Functionality</Title>
+        <Version>1.0</Version>
+        <Category>Core</Category>
+        <Priority>High</Priority>
+        <EstimatedTime>4 hours</EstimatedTime>
+        <Description>This guide covers the implementation of the checklist functionality within the PlanningService.</Description>
+        <Tags>planning, service, checklist</Tags>
+        <GitBranchName>feature/P1_004_Planning_Service_Checklist</GitBranchName>
+    </Metadata>
+
+    <Purpose>To implement the core checklist feature, allowing users to create and manage travel checklists.</Purpose>
+
+    <ScopeAndObjectives>
+        <Objective>Implement CRUD operations for checklists and checklist items.</Objective>
+        <Objective>Ensure that checklists are correctly associated with users.</Objective>
+    </ScopeAndObjectives>
+
+    <TechnicalStack>
+        <Language>Python</Language>
+        <Framework>FastAPI</Framework>
+    </TechnicalStack>
+
+    <Prerequisites>
+        <Prerequisite type="Guide" id="CTA_P1_002">Database schemas are created.</Prerequisite>
+        <Prerequisite type="Guide" id="CTA_P1_003">User and Cat services are implemented.</Prerequisite>
+    </Prerequisites>
+
+    <DocumentationReferences>
+        <Reference type="Design" href="../../design/CatTravelPlanning/03_Component_Design.md"/>
+        <Reference type="API" href="../../design/CatTravelPlanning/04_API_Specification.md"/>
+    </DocumentationReferences>
+
+    <TestReferences>
+        <UnitTest id="CTP_CHECKLIST_CREATE_001" path="../../tests/unit/CatTravelPlanning/planning_service_create_checklist_positive.xml"/>
+        <UnitTest id="CTP_CHECKLIST_ITEM_001" path="../../tests/unit/CatTravelPlanning/planning_service_add_checklist_item_invalid.xml"/>
+    </TestReferences>
+
+    <ImplementationSteps>
+        <Step number="1" name="Implement Planning Repository">
+            <Description>Implement the database interaction logic for checklists.</Description>
+            <Tasks>
+                <Task type="code" id="planning_repository_implementation">
+                    <Description>Create functions for CRUD operations on checklists.</Description>
+                    <Code language="python" file="src/cat_planning/planning_repository.py"><![CDATA[
+class PlanningRepository:
+    def __init__(self, db_session):
+        self.db = db_session
+
+    def create_checklist_with_items(self, user_id: str, trip_name: str, items: list[str]):
+        # DB logic to create a checklist and its items
+        pass
+
+    def get_checklists_by_user(self, user_id: str):
+        # DB logic to get all checklists for a user
+        pass
+                    ]]></Code>
+                </Task>
+            </Tasks>
+        </Step>
+        <Step number="2" name="Implement Planning Service">
+            <Description>Implement the business logic for the checklist feature.</Description>
+            <Tasks>
+                <Task type="code" id="planning_service_implementation">
+                    <Description>Implement the CRUD functions for checklists.</Description>
+                    <Code language="python" file="src/cat_planning/planning_service.py"><![CDATA[
+from .planning_repository import PlanningRepository
+
+class PlanningService:
+    def __init__(self, db_session):
+        self.repo = PlanningRepository(db_session)
+
+    def create_checklist(self, user_id: str, trip_name: str, items: list[str]):
+        return self.repo.create_checklist_with_items(user_id, trip_name, items)
+
+    def get_checklists_for_user(self, user_id: str):
+        return self.repo.get_checklists_by_user(user_id)
+                    ]]></Code>
+                </Task>
+            </Tasks>
+        </Step>
+    </ImplementationSteps>
+
+    <ValidationCriteria>
+        <Checklist>
+            <Item>The `PlanningService` and `PlanningRepository` for checklists are created.</Item>
+            <Item>The checklist management functions are implemented and working correctly.</Item>
+            <Item>All associated unit tests pass.</Item>
+        </Checklist>
+    </ValidationCriteria>
+</ImplementationGuide>

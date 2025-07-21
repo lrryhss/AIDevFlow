@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ImplementationGuide>
+    <Metadata>
+        <GuideID>CTA_P3_001</GuideID>
+        <Title>Phase 3: Payment Gateway Integration</Title>
+        <Version>1.0</Version>
+        <Category>Integration</Category>
+        <Priority>High</Priority>
+        <EstimatedTime>4 hours</EstimatedTime>
+        <Description>This guide covers the integration of the LogisticsService with a third-party payment gateway.</Description>
+        <Tags>payment, integration, gateway</Tags>
+        <GitBranchName>feature/P3_001_Payment_Gateway_Integration</GitBranchName>
+    </Metadata>
+
+    <Purpose>To securely process payments for container rentals and purchases.</Purpose>
+
+    <ScopeAndObjectives>
+        <Objective>Implement a client to interact with the payment gateway API.</Objective>
+        <Objective>Integrate payment intent creation into the order process.</Objective>
+        <Objective>Handle payment callbacks to update transaction status.</Objective>
+    </ScopeAndObjectives>
+
+    <TechnicalStack>
+        <Language>Python</Language>
+        <Framework>FastAPI</Framework>
+    </TechnicalStack>
+
+    <Prerequisites>
+        <Prerequisite type="Guide" id="CTA_P2_001">LogisticsService catalog and order functionality is implemented.</Prerequisite>
+    </Prerequisites>
+
+    <DocumentationReferences>
+        <Reference type="Design" href="../../design/CatTravelLogistics/03_Component_Design.md"/>
+    </DocumentationReferences>
+
+    <ImplementationSteps>
+        <Step number="1" name="Implement Payment Gateway Client">
+            <Description>Create a client to interact with the payment gateway's API.</Description>
+            <Tasks>
+                <Task type="code" id="payment_gateway_client">
+                    <Description>Create a class to handle API calls to the payment gateway.</Description>
+                    <Code language="python" file="src/cat_logistics/payment_gateway_client.py"><![CDATA[
+class PaymentGatewayClient:
+    def __init__(self, api_key):
+        self.api_key = api_key
+
+    def create_payment_intent(self, amount: int, currency: str):
+        # Logic to call the payment gateway's API
+        pass
+                    ]]></Code>
+                </Task>
+            </Tasks>
+        </Step>
+        <Step number="2" name="Integrate with LogisticsService">
+            <Description>Integrate the payment gateway client into the `LogisticsService`.</Description>
+            <Tasks>
+                <Task type="code" id="logistics_service_payment_integration">
+                    <Description>In the `create_order` function, call the payment gateway.</Description>
+                    <Code language="python" file="src/cat_logistics/logistics_service.py"><![CDATA[
+# In LogisticsService.create_order...
+payment_intent = self.payment_gateway.create_payment_intent(order.total_price_cents, "USD")
+return {"order_id": order.id, "payment_intent_client_secret": payment_intent.client_secret}
+                    ]]></Code>
+                </Task>
+            </Tasks>
+        </Step>
+        <Step number="3" name="Implement Payment Callback Handler">
+            <Description>Implement the webhook endpoint to handle payment status updates from the gateway.</Description>
+            <Tasks>
+                <Task type="code" id="payment_callback_handler">
+                    <Description>Create an API endpoint to receive and process payment callbacks.</Description>
+                    <Code language="python" file="src/cat_logistics/api_controllers.py"><![CDATA[
+@router.post("/payments/callback")
+def handle_payment_callback(payload: dict):
+    # 1. Verify the callback is from the payment gateway
+    # 2. Get the order ID from the payload
+    # 3. Update the order and transaction status in the database
+    pass
+                    ]]></Code>
+                </Task>
+            </Tasks>
+        </Step>
+    </ImplementationSteps>
+
+    <ValidationCriteria>
+        <Checklist>
+            <Item>The `PaymentGatewayClient` is implemented.</Item>
+            <Item>The `LogisticsService` correctly creates a payment intent.</Item>
+            <Item>The payment callback handler correctly updates the order status.</Item>
+        </Checklist>
+    </ValidationCriteria>
+</ImplementationGuide>

@@ -1,11 +1,9 @@
-feat(design): Create detailed design documents for Cat Travel App
+feat(tests): Create unit tests for all application components
 
-This commit introduces a comprehensive set of design documents for the Cat Travel App, covering the overall application architecture and detailed designs for the three core components:
+This commit introduces a comprehensive suite of unit tests for the Cat Travel App, covering all three core components:
 
 - CatSafetyMonitoring
 - CatTravelLogistics
 - CatTravelPlanning
 
-The new documentation follows the standards outlined in the design principles, including executive summaries, system architecture, data models, API specifications, UI/UX design, integration guides, development guides, security practices, and testing strategies.
-
-This structured approach to design ensures clarity, consistency, and a solid foundation for the development phase.
+The tests are generated from the design documentation and adhere to the project's testing principles. They cover positive, negative, and edge cases for the key functionalities of each component, ensuring a solid foundation for quality and reliability.

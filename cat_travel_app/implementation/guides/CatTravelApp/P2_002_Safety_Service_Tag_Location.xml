@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ImplementationGuide>
+    <Metadata>
+        <GuideID>CTA_P2_002</GuideID>
+        <Title>Phase 2: Safety Service - Tag and Location</Title>
+        <Version>1.0</Version>
+        <Category>Core</Category>
+        <Priority>High</Priority>
+        <EstimatedTime>6 hours</EstimatedTime>
+        <Description>This guide covers the implementation of the tag management and location tracking services in the SafetyService.</Description>
+        <Tags>safety, service, tag, location</Tags>
+        <GitBranchName>feature/P2_002_Safety_Service_Tag_Location</GitBranchName>
+    </Metadata>
+
+    <Purpose>To implement the core safety features of tag registration and location tracking.</Purpose>
+
+    <ScopeAndObjectives>
+        <Objective>Implement the `SafetyService` for managing tags and locations.</Objective>
+        <Objective>Integrate with the message queue for location updates.</Objective>
+    </ScopeAndObjectives>
+
+    <TechnicalStack>
+        <Language>Python</Language>
+        <Framework>FastAPI</Framework>
+        <Tool>RabbitMQ</Tool>
+    </TechnicalStack>
+
+    <Prerequisites>
+        <Prerequisite type="Guide" id="CTA_P1_002">Database schemas are created.</Prerequisite>
+    </Prerequisites>
+
+    <DocumentationReferences>
+        <Reference type="Design" href="../../design/CatSafetyMonitoring/03_Component_Design.md"/>
+        <Reference type="API" href="../../design/CatSafetyMonitoring/04_API_Specification.md"/>
+    </DocumentationReferences>
+
+    <TestReferences>
+        <UnitTest id="CSM_TAG_REG_001" path="../../tests/unit/CatSafetyMonitoring/tag_management_registration_positive.xml"/>
+        <UnitTest id="CSM_LOC_GET_001" path="../../tests/unit/CatSafetyMonitoring/location_service_get_history_positive.xml"/>
+    </TestReferences>
+
+    <ImplementationSteps>
+        <Step number="1" name="Implement Repositories">
+            <Description>Implement the database interaction logic for the `tracking_tags` and `location_history` tables.</Description>
+            <Tasks>
+                <Task type="code" id="safety_repository_implementation">
+                    <Description>Create functions for tag and location data.</Description>
+                    <Code language="python" file="src/cat_safety/safety_repository.py"><![CDATA[
+class SafetyRepository:
+    def __init__(self, db_session):
+        self.db = db_session
+
+    # Tag-related functions...
+    def find_tag_by_serial(self, serial_number: str): pass
+    def create_tag(self, user_id: str, cat_id: str, serial_number: str): pass
+
+    # Location-related functions...
+    def add_location_history(self, tag_id: str, latitude: float, longitude: float, accuracy: float): pass
+    def get_location_history_for_tag(self, tag_id: str, page: int, limit: int): pass
+                    ]]></Code>
+                </Task>
+            </Tasks>
+        </Step>
+        <Step number="2" name="Implement Safety Service">
+            <Description>Implement the business logic for the `SafetyService`.</Description>
+            <Tasks>
+                <Task type="code" id="safety_service_implementation">
+                    <Description>Implement the tag registration and location tracking functions.</Description>
+                    <Code language="python" file="src/cat_safety/safety_service.py"><![CDATA[
+from .safety_repository import SafetyRepository
+
+class SafetyService:
+    def __init__(self, db_session, message_queue):
+        self.repo = SafetyRepository(db_session)
+        self.mq = message_queue
+
+    def register_tag(self, user_id: str, cat_id: str, serial_number: str):
+        return self.repo.create_tag(user_id, cat_id, serial_number)
+
+    def ingest_location(self, tag_serial_number: str, latitude: float, longitude: float, accuracy: float):
+        tag_id = self.repo.find_tag_by_serial(tag_serial_number).id
+        self.repo.add_location_history(tag_id, latitude, longitude, accuracy)
+        self.mq.publish("location_updated", {"tag_id": tag_id, "latitude": latitude, "longitude": longitude})
+
+    def get_location_history(self, tag_id: str, page: int, limit: int):
+        return self.repo.get_location_history_for_tag(tag_id, page, limit)
+                    ]]></Code>
+                </Task>
+            </Tasks>
+        </Step>
+    </ImplementationSteps>
+
+    <ValidationCriteria>
+        <Checklist>
+            <Item>The `SafetyService` and `SafetyRepository` are created.</Item>
+            <Item>The tag and location functions are implemented and working correctly.</Item>
+            <Item>All associated unit tests pass.</Item>
+        </Checklist>
+    </ValidationCriteria>
+</ImplementationGuide>

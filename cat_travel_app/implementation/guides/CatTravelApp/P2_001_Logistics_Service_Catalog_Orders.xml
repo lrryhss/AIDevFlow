@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ImplementationGuide>
+    <Metadata>
+        <GuideID>CTA_P2_001</GuideID>
+        <Title>Phase 2: Logistics Service - Catalog and Orders</Title>
+        <Version>1.0</Version>
+        <Category>Core</Category>
+        <Priority>High</Priority>
+        <EstimatedTime>6 hours</EstimatedTime>
+        <Description>This guide covers the implementation of the container catalog and order creation logic in the LogisticsService.</Description>
+        <Tags>logistics, service, catalog, order</Tags>
+        <GitBranchName>feature/P2_001_Logistics_Service_Catalog_Orders</GitBranchName>
+    </Metadata>
+
+    <Purpose>To enable users to browse and order cat travel containers.</Purpose>
+
+    <ScopeAndObjectives>
+        <Objective>Implement the container catalog functionality.</Objective>
+        <Objective>Implement the order creation logic for both purchases and rentals.</Objective>
+    </ScopeAndObjectives>
+
+    <TechnicalStack>
+        <Language>Python</Language>
+        <Framework>FastAPI</Framework>
+    </TechnicalStack>
+
+    <Prerequisites>
+        <Prerequisite type="Guide" id="CTA_P1_002">Database schemas are created.</Prerequisite>
+    </Prerequisites>
+
+    <DocumentationReferences>
+        <Reference type="Design" href="../../design/CatTravelLogistics/03_Component_Design.md"/>
+        <Reference type="API" href="../../design/CatTravelLogistics/04_API_Specification.md"/>
+    </DocumentationReferences>
+
+    <TestReferences>
+        <UnitTest id="CTL_CATALOG_GET_001" path="../../tests/unit/CatTravelLogistics/logistics_service_get_catalog_positive.xml"/>
+        <UnitTest id="CTL_ORDER_CREATE_001" path="../../tests/unit/CatTravelLogistics/logistics_service_create_purchase_order_positive.xml"/>
+    </TestReferences>
+
+    <ImplementationSteps>
+        <Step number="1" name="Implement Logistics Repository">
+            <Description>Implement the database interaction logic for the `containers` and `orders` tables.</Description>
+            <Tasks>
+                <Task type="code" id="logistics_repository_implementation">
+                    <Description>Create functions for retrieving containers and creating orders.</Description>
+                    <Code language="python" file="src/cat_logistics/logistics_repository.py"><![CDATA[
+class LogisticsRepository:
+    def __init__(self, db_session):
+        self.db = db_session
+
+    def get_all_containers(self, container_type: str):
+        # DB logic to get all containers of a given type
+        pass
+
+    def create_order(self, order_details: dict):
+        # DB logic to create a new order
+        pass
+                    ]]></Code>
+                </Task>
+            </Tasks>
+        </Step>
+        <Step number="2" name="Implement Logistics Service">
+            <Description>Implement the business logic for the `LogisticsService`.</Description>
+            <Tasks>
+                <Task type="code" id="logistics_service_implementation">
+                    <Description>Implement the `get_containers` and `create_order` functions.</Description>
+                    <Code language="python" file="src/cat_logistics/logistics_service.py"><![CDATA[
+from .logistics_repository import LogisticsRepository
+
+class LogisticsService:
+    def __init__(self, db_session, inventory_system):
+        self.repo = LogisticsRepository(db_session)
+        self.inventory = inventory_system
+
+    def get_containers(self, container_type: str):
+        return self.repo.get_all_containers(container_type)
+
+    def create_order(self, user_id: str, container_id: str, order_type: str, **kwargs):
+        # 1. Check inventory
+        # 2. Create order in the database
+        # 3. Return order details
+        pass
+                    ]]></Code>
+                </Task>
+            </Tasks>
+        </Step>
+    </ImplementationSteps>
+
+    <ValidationCriteria>
+        <Checklist>
+            <Item>The `LogisticsService` and `LogisticsRepository` are created.</Item>
+            <Item>The catalog and order creation functions are implemented and working correctly.</Item>
+            <Item>All associated unit tests pass.</Item>
+        </Checklist>
+    </ValidationCriteria>
+</ImplementationGuide>

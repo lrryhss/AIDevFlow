@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ImplementationGuide>
+    <Metadata>
+        <GuideID>CTA_P3_002</GuideID>
+        <Title>Phase 3: Geofencing and Notifications</Title>
+        <Version>1.0</Version>
+        <Category>Core</Category>
+        <Priority>High</Priority>
+        <EstimatedTime>5 hours</EstimatedTime>
+        <Description>This guide covers the implementation of geofencing logic and push notifications in the SafetyService.</Description>
+        <Tags>safety, service, geofence, notification</Tags>
+        <GitBranchName>feature/P3_002_Geofencing_and_Notifications</GitBranchName>
+    </Metadata>
+
+    <Purpose>To implement the real-time geofencing and notification features of the application.</Purpose>
+
+    <ScopeAndObjectives>
+        <Objective>Implement geofence breach detection logic.</Objective>
+        <Objective>Implement a `NotificationService` to send push notifications.</Objective>
+    </ScopeAndObjectives>
+
+    <TechnicalStack>
+        <Language>Python</Language>
+        <Framework>FastAPI</Framework>
+        <Tool>RabbitMQ</Tool>
+    </TechnicalStack>
+
+    <Prerequisites>
+        <Prerequisite type="Guide" id="CTA_P2_002">SafetyService tag and location functionality is implemented.</Prerequisite>
+    </Prerequisites>
+
+    <DocumentationReferences>
+        <Reference type="Design" href="../../design/CatSafetyMonitoring/03_Component_Design.md"/>
+    </DocumentationReferences>
+
+    <ImplementationSteps>
+        <Step number="1" name="Implement Geofence Logic">
+            <Description>Implement the logic to detect geofence breaches.</Description>
+            <Tasks>
+                <Task type="code" id="geofence_logic_implementation">
+                    <Description>In the `SafetyService`, consume `location_updated` events and check for geofence breaches.</Description>
+                    <Code language="python" file="src/cat_safety/safety_service.py"><![CDATA[
+# In SafetyService class
+def handle_location_update(self, message):
+    # 1. Get geofences for the user
+    # 2. Check for breaches
+    # 3. Publish `geofence_breached` event
+    pass
+                    ]]></Code>
+                </Task>
+            </Tasks>
+        </Step>
+        <Step number="2" name="Implement Notification Service">
+            <Description>Implement the service to send push notifications.</Description>
+            <Tasks>
+                <Task type="code" id="notification_service_implementation">
+                    <Description>Create the `NotificationService` to consume events and send notifications.</Description>
+                    <Code language="python" file="src/cat_safety/notification_service.py"><![CDATA[
+class NotificationService:
+    def __init__(self, push_notification_provider):
+        self.provider = push_notification_provider
+
+    def handle_geofence_breach(self, message):
+        # 1. Get user device token
+        # 2. Send push notification
+        pass
+                    ]]></Code>
+                </Task>
+            </Tasks>
+        </Step>
+    </ImplementationSteps>
+
+    <ValidationCriteria>
+        <Checklist>
+            <Item>The `SafetyService` correctly detects and publishes geofence breach events.</Item>
+            <Item>The `NotificationService` sends push notifications for geofence breaches.</Item>
+        </Checklist>
+    </ValidationCriteria>
+</ImplementationGuide>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ImplementationGuide>
+    <Metadata>
+        <GuideID>CTA_P1_002</GuideID>
+        <Title>Phase 1: Database Schemas</Title>
+        <Version>1.0</Version>
+        <Category>Foundation</Category>
+        <Priority>High</Priority>
+        <EstimatedTime>3 hours</EstimatedTime>
+        <Description>This guide covers the setup of the database schemas for all three components.</Description>
+        <Tags>database, schema, foundation</Tags>
+        <GitBranchName>feature/P1_002_Database_Schemas</GitBranchName>
+    </Metadata>
+
+    <Purpose>To establish the database structure required to support all features of the Cat Travel App.</Purpose>
+
+    <ScopeAndObjectives>
+        <Objective>Create the database schemas for `cat_safety`, `cat_logistics`, and `cat_planning`.</Objective>
+        <Objective>Define all tables, columns, and relationships as specified in the data models.</Objective>
+    </ScopeAndObjectives>
+
+    <TechnicalStack>
+        <Database>PostgreSQL</Database>
+        <Tool>Alembic (for migrations)</Tool>
+    </TechnicalStack>
+
+    <Prerequisites>
+        <Prerequisite type="Guide" id="CTA_P1_001">Overall project setup is complete.</Prerequisite>
+    </Prerequisites>
+
+    <DocumentationReferences>
+        <Reference type="DataModel" href="../../design/CatSafetyMonitoring/02_Data_Model.md"/>
+        <Reference type="DataModel" href="../../design/CatTravelLogistics/02_Data_Model.md"/>
+        <Reference type="DataModel" href="../../design/CatTravelPlanning/02_Data_Model.md"/>
+    </DocumentationReferences>
+
+    <ImplementationSteps>
+        <Step number="1" name="Create Schemas">
+            <Description>Create the schemas for each component.</Description>
+            <Tasks>
+                <Task type="database" id="create_schemas">
+                    <Code language="sql"><![CDATA[
+CREATE SCHEMA IF NOT EXISTS cat_safety;
+CREATE SCHEMA IF NOT EXISTS cat_logistics;
+CREATE SCHEMA IF NOT EXISTS cat_planning;
+                    ]]></Code>
+                </Task>
+            </Tasks>
+        </Step>
+        <Step number="2" name="Create Tables">
+            <Description>Create the tables for each component within their respective schemas.</Description>
+            <Tasks>
+                <Task type="database" id="create_safety_tables">
+                    <Description>Create tables for the CatSafetyMonitoring component.</Description>
+                    <Code language="sql"><![CDATA[
+-- (Paste SQL from CSM_P1_DB_SETUP guide here)
+                    ]]></Code>
+                </Task>
+                <Task type="database" id="create_logistics_tables">
+                    <Description>Create tables for the CatTravelLogistics component.</Description>
+                    <Code language="sql"><![CDATA[
+-- (Paste SQL from CTL_P1_DB_SETUP guide here)
+                    ]]></Code>
+                </Task>
+                <Task type="database" id="create_planning_tables">
+                    <Description>Create tables for the CatTravelPlanning component.</Description>
+                    <Code language="sql"><![CDATA[
+-- (Paste SQL from CTP_P1_DB_SETUP guide here)
+                    ]]></Code>
+                </Task>
+            </Tasks>
+        </Step>
+    </ImplementationSteps>
+
+    <ValidationCriteria>
+        <Checklist>
+            <Item>All three schemas (`cat_safety`, `cat_logistics`, `cat_planning`) are created.</Item>
+            <Item>All tables for each component are created with the correct columns and constraints.</Item>
+        </Checklist>
+    </ValidationCriteria>
+</ImplementationGuide>
