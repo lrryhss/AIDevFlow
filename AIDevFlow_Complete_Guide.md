@@ -554,42 +554,139 @@ Based on the confirmed structure and adherence to testing principles, the AI gen
 
 Now, let's leverage the AI to create a strategic implementation plan, breaking down the entire Cat Travel App project into manageable phases or sprints.
 
-**Your Prompt:**
+**The Prompt Used to Start Implementation Generation:**
+```
+Please read the content of `5_reference/5.6_design_to_implementation_prompt.md` and then act as the AI agent described in the prompt.
+```
 
-> "Study all user stories related to the 'Cat Travel App' (from `cat_travel_app/user_stories/`), the comprehensive requirements (from Example 2's output), and the high-level design document (from Example 3's output). Based on this information, propose a phased implementation plan (e.g., 3-4 sprints) for the entire Cat Travel App. For each phase/sprint, break down the work into actionable tasks, identify key deliverables, and suggest a logical order of development. Prioritize core functionality first."
+**The Interaction:**
 
-**AI Output (Conceptual):** A structured plan, perhaps in Markdown or a simple XML format, detailing each phase/sprint with its objectives, tasks, and deliverables. For example:
+**AI:** ✦ I have read the prompt and am ready to act as the AI agent described.
+
+To proceed, I need the following information:
+
+Please provide the absolute path to the folder containing the design documents (e.g., `cat_travel_app/design/CatSafetyMonitoring/`).
+
+Please also provide the absolute path to the folder containing the unit test XML files (e.g., `cat_travel_app/tests/unit/CatSafetyMonitoring/`).
+
+Optionally, you can also provide the paths to the requirements and user stories folders.
+
+**User:** `cat_travel_app\design,cat_travel_app\tests\unit,cat_travel_app\requirements`
+
+**AI:** ✦ Thank you. I have the necessary folder paths:
+
+*   Design: `cat_travel_app\design`
+*   Unit Tests: `cat_travel_app\tests\unit`
+*   Requirements: `cat_travel_app\requirements`
+
+I will now study the documents in these locations.
+
+Which `[Project/Module Name]` would you like me to generate an implementation plan and guides for? The available components are:
+
+*   CatSafetyMonitoring
+*   CatTravelLogistics
+*   CatTravelPlanning
+*   CatTravelApp (for the overall application)
+
+**User:** `all of them`
+
+**AI:** ✦ Excellent. I will generate a comprehensive implementation plan that covers all three core components: CatSafetyMonitoring, CatTravelLogistics, and CatTravelPlanning.
+
+To ensure a logical and efficient development workflow, I will create a single, unified phased implementation plan for the entire CatTravelApp. This master plan will orchestrate the development of the tasks from all three components, prioritizing foundational work first.
+
+First, I need to re-read all the documentation for the components to create this unified plan. I will do this one component at a time to ensure I don't miss anything.
+
+Reading CatSafetyMonitoring documents...
+
+**AI:** ✦ I have read the documents for CatSafetyMonitoring. Now I will read the documents for CatTravelLogistics.
+
+**AI:** ✦ I have read the documents for CatTravelLogistics. Now I will read the documents for CatTravelPlanning.
+
+**AI:** ✦ I have now reviewed all the documentation for the three core components.
+
+Based on my comprehensive analysis, I propose the following phased implementation plan for the entire CatTravelApp:
 
 ```markdown
-## Phase 1: Core Accommodation Search & Basic User Profile
+Phased Implementation Plan: CatTravelApp
 
-**Objective:** Enable users to find cat-friendly accommodations and manage basic cat profiles.
+Phase 1: Foundational Setup (2 Sprints)
 
-**Tasks:**
-*   Implement Accommodation Search API (by location, basic filters).
-*   Develop User Authentication (login/registration).
-*   Build basic Cat Profile data model and CRUD operations.
-*   Design and implement Accommodation Search UI.
-*   Design and implement Basic Cat Profile UI.
+*   Objective: Establish the core infrastructure, shared services, and foundational features for all components.
+*   Tasks:
+    1. Overall Project Setup: Initialize the monorepo, CI/CD pipeline, and shared configurations.
+    2. Database Schemas: Implement the database schemas for all three components (cat_safety, cat_logistics, cat_planning).
+    3. User & Cat Services: Implement the shared services for managing user accounts and cat profiles.
+    4. Planning Service - Checklists: Implement the core checklist functionality from the CatTravelPlanning component.
+*   Deliverables:
+    *   A fully configured and automated CI/CD pipeline.
+    *   All database schemas implemented and tested.
+    *   Functional User, Cat, and Planning (checklist) services.
 
-**Deliverables:** Functional accommodation search, basic user and cat profile management.
+Phase 2: Core Feature Implementation (3 Sprints)
 
-## Phase 2: Advanced Travel Planning & Container Management
+*   Objective: Implement the primary features of each component.
+*   Tasks:
+    1. Logistics Service - Catalog & Orders: Implement the container catalog and order creation logic.
+    2. Safety Service - Tag & Location: Implement the tag management and location tracking services.
+    3. Planning Service - Accommodation Search: Implement the accommodation search and integration.
+*   Deliverables:
+    *   Users can browse and order travel containers.
+    *   Users can register tracking tags and view their cat's location history.
+    *   Users can search for cat-friendly accommodations.
 
-**Objective:** Enhance search with cat-specific filters, provide travel guidance, and manage travel containers.
+Phase 3: Integration & Real-time Features (2 Sprints)
 
-**Tasks:**
-*   Extend Accommodation Search API with advanced cat-specific filters.
-*   Implement Cat Travel Checklist & Guidance features.
-*   Develop Cat Travel Container Management (browse, rent/purchase).
-*   Update Search UI with advanced filters.
-*   Implement Travel Checklist UI.
-*   Implement Container Management UI.
-
-**Deliverables:** Advanced accommodation search, comprehensive travel guidance, and container management.
-
-...
+*   Objective: Integrate external services and implement real-time features.
+*   Tasks:
+    1. Payment Gateway Integration: Integrate the LogisticsService with the payment gateway.
+    2. Geofencing & Notifications: Implement the geofencing logic and push notifications in the SafetyService.
+    3. WebSocket Integration: Implement the WebSocket for real-time location updates.
+*   Deliverables:
+    *   A fully functional payment system for logistics.
+    *   Real-time geofence alerts and notifications.
+    *   Live location updates on the mobile app.
 ```
+
+I will now begin generating the implementation guides for each task in this plan, starting with Phase 1. I will create a separate guide for each task, and each guide will include a proposed Git branch name that matches its filename.
+
+I will start with the first task of Phase 1: the overall project setup. I will create the file `cat_travel_app/implementation/guides/CatTravelApp/P1_001_Overall_Project_Setup.xml`.
+
+**AI:** ✦ I have created the implementation guide for the overall project setup.
+
+Next, I will create the implementation guide for the second task of Phase 1: setting up the database schemas for all components. I will create the file `cat_travel_app/implementation/guides/CatTravelApp/P1_002_Database_Schemas.xml`.
+
+**AI:** ✦ I have created the implementation guide for the database schemas.
+
+Next, I will create the implementation guide for the third task of Phase 1: the shared User and Cat services. I will create the file `cat_travel_app/implementation/guides/CatTravelApp/P1_003_User_Cat_Services.xml`.
+
+**AI:** ✦ I have created the implementation guide for the User and Cat services.
+
+Next, I will create the implementation guide for the final task of Phase 1: the checklist functionality of the PlanningService. I will create the file `cat_travel_app/implementation/guides/CatTravelApp/P1_004_Planning_Service_Checklist.xml`.
+
+**AI:** ✦ I have created the implementation guide for geofencing and notifications.
+
+Finally, I will create the implementation guide for the last task of Phase 3: WebSocket integration. I will create the file `cat_travel_app/implementation/guides/CatTravelApp/P3_003_WebSocket_Integration.xml`.
+
+**AI Output (Generated Implementation Guides):**
+
+Based on the confirmed phased implementation plan, the AI generated the following implementation guides, organized into their respective phase subdirectories under `cat_travel_app/implementation/guides/CatTravelApp/`:
+
+*   **Phase 1: Foundational Setup**
+    *   [P1_001_Overall_Project_Setup.xml](cat_travel_app/implementation/guides/CatTravelApp/P1_001_Overall_Project_Setup.xml)
+    *   [P1_002_Database_Schemas.xml](cat_travel_app/implementation/guides/CatTravelApp/P1_002_Database_Schemas.xml)
+    *   [P1_003_User_Cat_Services.xml](cat_travel_app/implementation/guides/CatTravelApp/P1_003_User_Cat_Services.xml)
+    *   [P1_004_Planning_Service_Checklist.xml](cat_travel_app/implementation/guides/CatTravelApp/P1_004_Planning_Service_Checklist.xml)
+
+*   **Phase 2: Core Feature Implementation**
+    *   [P2_001_Logistics_Service_Catalog_Orders.xml](cat_travel_app/implementation/guides/CatTravelApp/P2_001_Logistics_Service_Catalog_Orders.xml)
+    *   [P2_002_Safety_Service_Tag_Location.xml](cat_travel_app/implementation/guides/CatTravelApp/P2_002_Safety_Service_Tag_Location.xml)
+    *   [P2_003_Planning_Service_Accommodation_Search.xml](cat_travel_app/implementation/guides/CatTravelApp/P2_003_Planning_Service_Accommodation_Search.xml)
+
+*   **Phase 3: Integration & Real-time Features**
+    *   [P3_001_Payment_Gateway_Integration.xml](cat_travel_app/implementation/guides/CatTravelApp/P3_001_Payment_Gateway_Integration.xml)
+    *   [P3_002_Geofencing_and_Notifications.xml](cat_travel_app/implementation/guides/CatTravelApp/P3_002_Geofencing_and_Notifications.xml)
+    *   [P3_003_WebSocket_Integration.xml](cat_travel_app/implementation/guides/CatTravelApp/P3_003_WebSocket_Integration.xml)
+
 
 ### Example 6: Implementing a Task (Building the Cat Tracking Module)
 
