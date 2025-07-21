@@ -172,6 +172,11 @@ To make this concrete, let's walk through a real-world example using our excitin
 
 We started with a simple idea: a travel app for cats. We then used an AI interviewer to elicit more details.
 
+**The Prompt Used to Start the Interview:**
+```
+Please read the content of `5_reference/5.2_idea_interview_prompt.md` and then act as the AI interviewer as described in the prompt.
+```
+
 **The Interview Prompt Used:**
 ```markdown
 Act as an AI interviewer for a new software idea. Your goal is to elicit detailed information to help define the core concept and initial requirements.
