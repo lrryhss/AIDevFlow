@@ -9,6 +9,7 @@
         <EstimatedTime>[Time estimate, e.g., "2 hours", "1 day"]</EstimatedTime>
         <Description>[Comprehensive description of what this implementation guide covers]</Description>
         <Tags>[Comma-separated tags: backend, frontend, database, api, security, etc.]</Tags>
+        <GitBranchName>[Name of the feature/development branch for this implementation]</GitBranchName>
     </Metadata>
 
     <DocumentationReferences>
