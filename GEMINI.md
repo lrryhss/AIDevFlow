@@ -81,9 +81,10 @@ This summary will guide my actions and ensure that any contributions I make are 
 
 **Issue**: Parsing errors in Mermaid diagrams due to specific syntax interpretations, particularly with parentheses `()` within node labels and text within curly braces `{}`.
 
-**Resolution**:
-- Replaced parentheses `()` in node labels (e.g., `[BRD]`, `(TRS)`) with hyphens `-` or square brackets `[]` to avoid misinterpretation by the Mermaid parser.
-- Ensured text within curly brace nodes (e.g., `{"BRD Approved?"}`) is enclosed in double quotes `""` to be treated as literal strings.
+**Resolution**: When creating Mermaid diagrams, avoid these common parsing issues by:
+- Enclosing text within node labels that contain special characters (like parentheses `()`) in square brackets `[]` or double quotes `""` (e.g., `[Node Text (with parens)]` or `{"Node Text (with parens)"}`).
+- Ensuring text within curly brace nodes `{}` is always enclosed in double quotes `""` (e.g., `{"Decision Text?"}`).
+- Strictly adhering to the guidelines outlined in `1_principles/1.3_design_principles.md`, particularly Section 4: "Mermaid Diagram Guidelines."
 
 **Affected Files**: All SOPs in `docs/SOPs/` and `docs/SOPs/Git/` containing Mermaid diagrams.
 
