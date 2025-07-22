@@ -692,9 +692,34 @@ Based on the confirmed phased implementation plan, the AI generated the followin
 
 With the phased plan in hand, we can now instruct the AI to work on a specific task, leveraging all the prior documentation. Let's focus on implementing the core logic for the Cat Tracking Tag Integration.
 
-**Your Prompt:**
+**The Prompt Used to Start Code Generation:**
+```
+Please read the content of `5_reference/5.7_implementation_to_code_prompt.md` and then act as the AI agent described in the prompt.
+```
 
-> "Let's start working on 'Implement Cat Tracking Tag Integration' from our implementation plan (from Example 5's output). Study the relevant user story [US-CAT-004: Cat Tracking Tag Integration](cat_travel_app/user_stories/2.1_user_story_cat_travel_4.md), the requirements for the Cat Tracking module (assume it's at `cat_travel_app/requirements/tracking_requirements.xml`), the design document for the Cat Tracking service (assume it's at `cat_travel_app/design/tracking_service_design.md`), and the unit tests generated for this module (from Example 4's output). Generate the Python code for the `CatTrackerService` class, including methods for receiving location updates, storing history, and triggering geofence alerts, adhering to the design and requirements. Once the code is generated, run the associated unit tests to verify its correctness. Assume the unit tests are in a file named `test_cat_tracker_service.py`."
+**The Interaction:**
+
+**AI:** ✦ I have read the prompt and am ready to act as the AI agent described.
+
+To proceed, I need the following information:
+
+Please provide the absolute path to the `implementation_guide.xml` file you want to implement (e.g., `cat_travel_app/implementation/guides/CatTravelApp/P1_001_Overall_Project_Setup.xml`).
+
+Optionally, you can also provide the absolute paths to the folders containing:
+- Design documents (e.g., `cat_travel_app/design/`)
+- Unit test XML files (e.g., `cat_travel_app/tests/unit/`)
+- Requirements documents (e.g., `cat_travel_app/requirements/`)
+- Original user stories (e.g., `cat_travel_app/user_stories/`)
+
+**User:** `cat_travel_app\implementation\guides\CatTravelApp\P2_002_Safety_Service_Tag_Location.xml,cat_travel_app\design,cat_travel_app\tests\unit,cat_travel_app\requirements,cat_travel_app\user_stories`
+
+**AI:** ✦ Thank you. I have the implementation guide path: `cat_travel_app\implementation\guides\CatTravelApp\P2_002_Safety_Service_Tag_Location.xml` and the contextual document paths.
+
+I will now study these documents.
+
+**AI:** ✦ Excellent. I will now read and internalize all the required documentation to ensure the generated code is of the highest quality and adheres to all project standards. This includes implementation principles, Mermaid syntax guide, relevant SOPs, style guides, and best practices.
+
+I will then begin generating the Python code for the tasks specified in the `P2_002_Safety_Service_Tag_Location.xml` implementation guide.
 
 **AI Output (Conceptual):**
 
@@ -713,7 +738,7 @@ class CatTrackerService:
         if cat_id not in self.locations:
             self.locations[cat_id] = []
         self.locations[cat_id].append((timestamp, lat, lon))
-        print(f"Recorded location for {cat_id}: ({lat}, {lon}) at {timestamp}")
+        print(f"Recorded location for {cat_id}: ({lat}, {lon}) at {timestamp})
         self._check_geofence(cat_id, lat, lon)
 
     def get_current_location(self, cat_id: str):
@@ -744,20 +769,15 @@ class CatTrackerService:
 # ... (other necessary imports and setup for a real service)
 ```
 
+**Save Instructions:**
+Save the above code to `cat_travel_app/src/services/cat_tracker_service.py`.
+
+**Test Commands:**
 ```bash
 # Running unit tests...
-pytest test_cat_tracker_service.py
-```
-
-```
-============================= test session starts ==============================
-platform linux -- Python 3.9.7, pytest-6.2.5, pluggy-1.0.0
-rootdir: /app
-collected 5 items
-
-test_cat_tracker_service.py .....                                        [100%]
-
-============================== 5 passed in 0.03s ===============================
+pytest cat_travel_app/tests/unit/CatSafetyMonitoring/geofence_service_creation_positive.xml
+pytest cat_travel_app/tests/unit/CatSafetyMonitoring/location_service_get_history_positive.xml
+# ... and other relevant unit tests for this module
 ```
 
 
