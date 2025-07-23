@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Persona>
+    <Metadata>
+        <PersonaID>PER-001</PersonaID>
+        <Version>1.0</Version>
+        <Date>2025-07-22</Date>
+        <Author>UI/UX Team</Author>
+        <Project>Project Name</Project>
+    </Metadata>
+
+    <!-- A persona represents a significant user group for your product. -->
+    <!-- It is a fictional character, but based on real user research. -->
+
+    <Profile>
+        <Name>Example Persona Name (e.g., "Proactive Planner Paula")</Name>
+        <PhotoURL>path/to/persona/image.jpg</PhotoURL>
+        <Quote>"A short, memorable quote that sums up the persona's attitude."</Quote>
+        <Bio>A brief 2-3 sentence summary of the persona's background, lifestyle, and relationship to the product space.</Bio>
+    </Profile>
+
+    <Demographics>
+        <Age>e.g., 34</Age>
+        <Occupation>e.g., Marketing Manager</Occupation>
+        <Location>e.g., San Francisco, CA</Location>
+        <MaritalStatus>e.g., Married, two children</MaritalStatus>
+        <Education>e.g., Master's Degree in Business</Education>
+        <TechSavviness>A scale or description (e.g., "High - uses multiple productivity apps daily").</TechSavviness>
+    </Demographics>
+
+    <Personality>
+        <!-- Use a simple framework like Myers-Briggs, or just descriptive words -->
+        <Traits>
+            <Trait>e.g., Organized</Trait>
+            <Trait>e.g., Detail-oriented</Trait>
+            <Trait>e.g., Collaborative</Trait>
+            <Trait>e.g., Goal-driven</Trait>
+        </Traits>
+    </Personality>
+
+    <Goals>
+        <!-- What is this user trying to accomplish? These should be related to your product. -->
+        <Goal priority="High">Primary goal #1 (e.g., "Efficiently manage team projects and deadlines").</Goal>
+        <Goal priority="Medium">Secondary goal #2 (e.g., "Get a clear overview of project progress at a glance").</Goal>
+        <Goal priority="Low">Tertiary goal #3 (e.g., "Share progress reports with stakeholders easily").</Goal>
+    </Goals>
+
+    <Frustrations>
+        <!-- What are their current pain points and challenges that your product can solve? -->
+        <Frustration severity="High">Primary frustration #1 (e.g., "Wasting time switching between different tools for communication, tasks, and files.").</Frustration>
+        <Frustration severity="Medium">Secondary frustration #2 (e.g., "Difficulty tracking dependencies between tasks.").</Frustration>
+        <Frustration severity="Low">Tertiary frustration #3 (e.g., "Onboarding new team members to the current toolset is time-consuming.").</Frustration>
+    </Frustrations>
+
+    <Motivations>
+        <!-- What drives this user? What are they looking for in a solution? -->
+        <Motivation factor="Efficiency">Wants to get more done in less time.</Motivation>
+        <Motivation factor="Clarity">Needs to see the big picture without losing the details.</Motivation>
+        <Motivation factor="Autonomy">Prefers tools that are powerful but don't get in the way.</Motivation>
+    </Motivations>
+
+    <Scenario>
+        <!-- A short story describing how the persona might interact with your product in a specific context. -->
+        <Context>Describe the situation (e.g., "Paula is starting her work week on Monday morning and needs to plan her team's tasks.")</Context>
+        <Action>Describe the steps she takes using the product (e.g., "She opens the app, navigates to the 'Sprint Planning' view, and begins dragging tasks from the backlog into the current sprint. She assigns tasks to team members and sets due dates, seeing the team's workload update in real-time.")</Action>
+        <Outcome>Describe the successful result (e.g., "Within 15 minutes, the week's plan is set, and the team has a clear, shared understanding of their priorities.")</Outcome>
+    </Scenario>
+
+</Persona>

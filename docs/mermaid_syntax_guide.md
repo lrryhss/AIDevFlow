@@ -41,18 +41,36 @@ H{{Hexagon}}
 - `node-with-dashes` (can cause issues)
 - Very long IDs
 
-### 3. Node Text Rules
-✅ **Safe text:**
+### 3. Node Text Rules - QUOTES ARE CRITICAL!
+
+**⚠️ MOST COMMON ERROR: Quotes inside node labels**
+
+❌ **These WILL cause parse errors:**
+```mermaid
+A[Show "Invalid credentials" error]     %% Double quotes inside brackets = ERROR
+B[Display "Success" message]           %% Another quote error
+C[Process "user data" safely]          %% Yet another quote error
+```
+
+✅ **Safe alternatives:**
+```mermaid
+A[Show Invalid credentials error]       %% Remove quotes entirely
+B[Show 'Invalid credentials' error]     %% Use single quotes
+C["Show 'Invalid credentials' error"]   %% Wrap whole thing in double quotes
+D[Display Success message]              %% Remove quotes entirely
+```
+
+✅ **Other safe text patterns:**
 ```mermaid
 A[Simple Text]
 B[Text with Numbers 123]
-C[Text & Symbols]
+C[Text & Symbols !@#]
+D[Text with (parentheses) at ends]
 ```
 
-❌ **Problematic text:**
+❌ **Other problematic patterns:**
 ```mermaid
-A[Text with "quotes"]  %% Use single quotes instead
-B[Text with (parentheses) in middle]  %% Can confuse parser
+E[Text with (parentheses) in middle]    %% Can confuse parser with node shapes
 ```
 
 ## Connection Syntax
@@ -120,7 +138,30 @@ graph TD
 
 ## Common Syntax Errors & Solutions
 
-### Error 1: Parse error with connections
+### Error 1: QUOTES IN NODE LABELS (Most Common!)
+This is the #1 cause of Mermaid parse errors!
+
+❌ **Wrong - This exact pattern causes the error you're seeing:**
+```mermaid
+D --|No|--> F[Show "Invalid credentials" error]
+%% Error: Parse error... Expecting 'SQE', 'DOUBLECIRCLEEND'... got 'STR'
+```
+
+✅ **Correct solutions:**
+```mermaid
+%% Option 1: Remove quotes
+D --|No|--> F[Show Invalid credentials error]
+
+%% Option 2: Use single quotes  
+D --|No|--> F[Show 'Invalid credentials' error]
+
+%% Option 3: Wrap entire label in double quotes
+D --|No|--> F["Show 'Invalid credentials' error"]
+```
+
+**Why this happens:** Double quotes inside square brackets confuse the parser because quotes have special meaning in Mermaid syntax.
+
+### Error 2: Parse error with connections
 ❌ **Wrong:**
 ```mermaid
 subgraph "Services"
@@ -138,7 +179,7 @@ end
 A -->|Connection| B
 ```
 
-### Error 2: Missing end statements
+### Error 3: Missing end statements
 ❌ **Wrong:**
 ```mermaid
 subgraph "Group 1"
@@ -159,7 +200,7 @@ subgraph "Group 2"
 end
 ```
 
-### Error 3: Invalid characters in labels
+### Error 4: More quote problems in different contexts
 ❌ **Wrong:**
 ```mermaid
 A[Service "API"] --> B  %% Quotes inside brackets
@@ -172,7 +213,7 @@ A[Service API] --> B
 A["Service 'API'"] --> B  %% Use single quotes inside
 ```
 
-### Error 4: Mixing node definitions
+### Error 5: Mixing node definitions
 ❌ **Wrong:**
 ```mermaid
 A[Start] --> B{Decision} --> C[End]  %% Defining shape in connection
@@ -253,10 +294,12 @@ graph TD
 
 When you get a parse error:
 
-1. **Check subgraph closure:** Every `subgraph` needs an `end`
-2. **Review connection syntax:** Use `A -->|label| B`, not `A --> B: label`
-3. **Validate node IDs:** No spaces or special characters
-4. **Check quotes:** Consistent quote usage in labels
+1. **🚨 CHECK QUOTES FIRST:** This causes 80% of parse errors!
+   - Look for `"quotes"` inside `[square brackets]`
+   - Remove quotes or use single quotes instead
+2. **Check subgraph closure:** Every `subgraph` needs an `end`
+3. **Review connection syntax:** Use `A -->|label| B`, not `A --> B: label`
+4. **Validate node IDs:** No spaces or special characters
 5. **Verify structure:** All connections defined after subgraphs
 6. **Remove complexity:** Comment out styling and labels to isolate the issue
 
