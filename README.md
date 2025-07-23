@@ -25,6 +25,7 @@ The framework is organized into five distinct stages:
 *   **Traceability**: Every requirement, design decision, and line of code is traceable back to its original user story.
 *   **AI-Augmented**: The entire process is designed to be used in collaboration with AI assistants, with specific prompts and guides to maximize their effectiveness.
 *   **Enterprise-Ready**: Includes comprehensive guides on coding standards, security best practices, and Standard Operating Procedures (SOPs) for enterprise-grade software.
+*   **Comprehensive UI/UX Framework**: A full suite of UI/UX principles, templates, and SOPs to ensure a consistent and user-centered design process.
 *   **Comprehensive Case Study**: The `cat_travel_app/` directory contains a complete, end-to-end example of the AI Dev Flow in action.
 
 ## Getting Started

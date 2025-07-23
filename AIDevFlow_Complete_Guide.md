@@ -783,6 +783,44 @@ pytest cat_travel_app/tests/unit/CatSafetyMonitoring/location_service_get_histor
 
 ---
 
+### Example 7: Continuing the Conversation (The Follow-up Interview)
+
+Software development is a marathon, not a sprint. After the initial features are built, you'll inevitably need to add more, conduct reviews, or plan for deployment. The AI Dev Flow supports this with a system for conducting stateful, context-aware follow-up interviews.
+
+**The Prompt Used to Continue an Interview:**
+```
+Please read the content of `5_reference/5.9_continue_interview_prompt.md` and then act as the AI agent described in the prompt.
+```
+
+**The Interaction:**
+
+**AI:** ✦ I have read the prompt and am ready to act as the master controller for follow-up interviews.
+
+Which project would you like to continue working on?
+
+**User:** `cat_travel_app`
+
+**AI:** ✦ I will now load the complete context for the Cat Travel App...
+
+*(The AI uses its tools to read all the files in the `interview/`, `user_stories/`, `requirements/`, `design/`, and `tests/` directories for the `cat_travel_app` project.)*
+
+**AI:** ✦ I have loaded the project context. Which type of follow-up interview would you like to conduct?
+
+Available interviews:
+- `deployment_planning_prompt.md`
+- `new_feature_prompt.md`
+- `security_review_prompt.md`
+- `technical_research_prompt.md`
+- `ui_design_prompt.md`
+
+**User:** `security_review_prompt.md`
+
+**AI:** ✦ I have loaded the Security Review prompt and the full project context. Let's begin.
+
+*(The AI then proceeds with the specialized security review interview, fully aware of all the existing requirements, designs, and tests for the Cat Travel App.)*
+
+---
+
 ## Your AI-Powered Future
 
 That's it! By following these five steps, you can transform the way you build software. The AI Dev Flow provides the structure, and your AI assistant provides the leverage.
